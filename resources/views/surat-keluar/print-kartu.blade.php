@@ -142,7 +142,7 @@
                 </tr>
                 <tr>
                     <td colspan="2" style="width: 30%;">
-                        <span class="label">Tanggal Keluar</span>
+                        <span class="label">Tanggal Surat</span>
                         <div class="value handwriting">{{ \Carbon\Carbon::parse($surat->tgl_keluar)->format('d F Y') }}</div>
                     </td>
                     <td colspan="2" style="width: 40%;">
@@ -166,7 +166,7 @@
                         </div>
                     </td>
                     <td colspan="2">
-                        <span class="label">Tgl. Disposisi</span>
+                        <span class="label">Tanggal Diteruskan</span>
                         <div class="value handwriting">
                             @if($disposisi)
                                 {{ \Carbon\Carbon::parse($disposisi->created_at)->format('d F Y') }}
