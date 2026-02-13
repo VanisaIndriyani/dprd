@@ -119,29 +119,16 @@
                                             @endif
                                             
                                             <!-- TTD Display -->
-                                            <div class="col-12 mt-3 pt-3 border-top">
-                                                <div class="text-center mx-auto" style="max-width: 200px;">
-                                                    <small class="d-block fw-bold text-dark mb-1">
-                                                        {{ $disposisi->ttd_jabatan ?? 'Sekretaris DPRD' }}
-                                                    </small>
-
-                                                    <small class="d-block text-muted mb-2">
-                                                        Paraf & Tanggal:
-                                                        {{ $disposisi->ttd_tanggal ? \Carbon\Carbon::parse($disposisi->ttd_tanggal)->format('d/m/Y') : '-' }}
-                                                    </small>
-
+                                            <div class="col-12 mt-3 pt-3 border-top text-end">
+                                                <div class="d-inline-block text-center" style="min-width: 150px;">
+                                                    <small class="d-block fw-bold text-dark mb-1">{{ $disposisi->ttd_jabatan ?? 'Sekretaris DPRD' }}</small>
+                                                    <small class="d-block text-muted mb-1">Paraf & Tanggal: {{ $disposisi->ttd_tanggal ? \Carbon\Carbon::parse($disposisi->ttd_tanggal)->format('d/m/Y') : '-' }}</small>
                                                     @if($disposisi->ttd_image)
-                                                        <img src="{{ asset('storage/' . $disposisi->ttd_image) }}"
-                                                             alt="TTD"
-                                                             class="img-fluid my-2"
-                                                             style="max-height: 70px;">
+                                                        <img src="{{ asset('storage/' . $disposisi->ttd_image) }}" alt="TTD" class="d-block mx-auto" style="height: 60px; margin: 5px auto;">
                                                     @else
-                                                        <div style="height: 70px;"></div>
+                                                        <div style="height: 60px;"></div>
                                                     @endif
-
-                                                    <div class="fw-bold text-dark border-bottom border-dark pb-1">
-                                                        {{ $disposisi->ttd_nama ?? 'Pimpinan' }}
-                                                    </div>
+                                                    <div class="fw-bold text-dark border-bottom border-dark pb-1 d-inline-block px-3">{{ $disposisi->ttd_nama ?? 'Pimpinan' }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -290,15 +277,9 @@
                                                         <label class="small text-muted">Nama Lengkap</label>
                                                         <input type="text" class="form-control form-control-sm" name="ttd_nama" value="{{ session('user_name') }}" required>
                                                     </div>
-                                                    <div class="col-12">
-                                                        <label class="small text-muted">Upload Tanda Tangan (Opsional)</label>
-                                                        <input type="file" class="form-control form-control-sm" name="ttd_image" accept="image/*" id="ttd_image_input">
-                                                        <div class="form-text small text-muted">Format: JPG, PNG.</div>
-                                                    </div>
-
                                                     <!-- Digital Signature Pad -->
                                                     <div class="col-12">
-                                                        <label class="small text-muted">Atau Buat Tanda Tangan Digital</label>
+                                                        <label class="small text-muted">Buat Tanda Tangan Digital</label>
                                                         <div class="border rounded p-2 bg-light">
                                                             <canvas id="signature-canvas" class="bg-white border w-100" height="150" style="touch-action: none;"></canvas>
                                                             <div class="mt-2 d-flex justify-content-between align-items-center">
