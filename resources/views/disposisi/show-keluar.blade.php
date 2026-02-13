@@ -122,7 +122,12 @@
                                             <div class="col-12 mt-3 pt-3 border-top text-end">
                                                 <div class="d-inline-block text-center" style="min-width: 150px;">
                                                     <small class="d-block fw-bold text-dark mb-1">{{ $disposisi->ttd_jabatan ?? 'Sekretaris DPRD' }}</small>
-                                                    <small class="d-block text-muted mb-4">Paraf & Tanggal: {{ $disposisi->ttd_tanggal ? \Carbon\Carbon::parse($disposisi->ttd_tanggal)->format('d/m/Y') : '-' }}</small>
+                                                    <small class="d-block text-muted mb-1">Paraf & Tanggal: {{ $disposisi->ttd_tanggal ? \Carbon\Carbon::parse($disposisi->ttd_tanggal)->format('d/m/Y') : '-' }}</small>
+                                                    @if($disposisi->ttd_image)
+                                                        <img src="{{ asset('storage/' . $disposisi->ttd_image) }}" alt="TTD" class="d-block mx-auto" style="height: 60px; margin: 5px auto;">
+                                                    @else
+                                                        <div style="height: 60px;"></div>
+                                                    @endif
                                                     <div class="fw-bold text-dark border-bottom border-dark pb-1 d-inline-block px-3">{{ $disposisi->ttd_nama ?? 'Pimpinan' }}</div>
                                                 </div>
                                             </div>
@@ -274,16 +279,135 @@
                                                     </div>
                                                     <div class="col-12">
                                                         <label class="small text-muted">Upload Tanda Tangan (Opsional)</label>
-                                                        <input type="file" class="form-control form-control-sm" name="ttd_image" accept="image/*">
-                                                        <div class="form-text small text-muted">Format: JPG, PNG. Jika diupload, akan menggantikan nama di kartu.</div>
+                                                        <input type="file" class="form-control form-control-sm" name="ttd_image" accept="image/*" id="ttd_image_input">
+                                                        <div class="form-text small text-muted">Format: JPG, PNG.</div>
+                                                    </div>
+
+                                                    <!-- Digital Signature Pad -->
+                                                    <div class="col-12">
+                                                        <label class="small text-muted">Atau Buat Tanda Tangan Digital</label>
+                                                        <div class="border rounded p-2 bg-light">
+                                                            <canvas id="signature-canvas" class="bg-white border w-100" height="150" style="touch-action: none;"></canvas>
+                                                            <div class="mt-2 d-flex justify-content-between align-items-center">
+                                                                <button type="button" class="btn btn-sm btn-outline-danger" id="clear-signature">
+                                                                    <i class="bi bi-eraser me-1"></i> Hapus Tanda Tangan
+                                                                </button>
+                                                                <small class="text-muted fst-italic" id="signature-status">Coret di canvas di atas</small>
+                                                            </div>
+                                                            <input type="hidden" name="ttd_signature_base64" id="ttd_signature_base64">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <button type="submit" class="btn btn-sm btn-dark w-100 fw-bold"><i class="bi bi-send-fill me-2"></i> Kirim Disposisi</button>
+                                            <button type="submit" class="btn btn-sm btn-dark w-100 fw-bold" id="submit-disposisi"><i class="bi bi-send-fill me-2"></i> Kirim Disposisi</button>
                                         </form>
                                     </div>
                                 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const canvas = document.getElementById('signature-canvas');
+        const clearBtn = document.getElementById('clear-signature');
+        const hiddenInput = document.getElementById('ttd_signature_base64');
+        const statusText = document.getElementById('signature-status');
+        const form = canvas.closest('form');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let hasSignature = false;
+
+        // Resize canvas to fit container
+        function resizeCanvas() {
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            ctx.scale(ratio, ratio);
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const pos = getPos(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#000';
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            e.preventDefault(); // Prevent scrolling on touch
+            const pos = getPos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            hasSignature = true;
+            statusText.innerText = "Tanda tangan terdeteksi";
+            statusText.classList.add('text-success');
+            statusText.classList.remove('text-muted');
+        }
+
+        function stopDrawing() {
+            if (isDrawing) {
+                isDrawing = false;
+                updateHiddenInput();
+            }
+        }
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            let clientX, clientY;
+            
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+
+        function updateHiddenInput() {
+            if (hasSignature) {
+                hiddenInput.value = canvas.toDataURL('image/png');
+            } else {
+                hiddenInput.value = '';
+            }
+        }
+
+        // Mouse Events
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        // Touch Events
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDrawing);
+
+        // Clear Button
+        clearBtn.addEventListener('click', function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Use actual width/height
+            hasSignature = false;
+            hiddenInput.value = '';
+            statusText.innerText = "Coret di canvas di atas";
+            statusText.classList.remove('text-success');
+            statusText.classList.add('text-muted');
+        });
+
+        // Form Submit
+        form.addEventListener('submit', function(e) {
+            updateHiddenInput();
+        });
+    });
+</script>
                                 @else
                                 <div class="alert alert-warning mt-3 mb-0 d-flex align-items-center">
                                     <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>

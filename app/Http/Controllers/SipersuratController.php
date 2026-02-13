@@ -378,7 +378,20 @@ class SipersuratController extends Controller
             'ttd_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        if ($request->hasFile('ttd_image')) {
+        // Handle Base64 Signature
+        if ($request->filled('ttd_signature_base64')) {
+            $image_parts = explode(";base64,", $request->ttd_signature_base64);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($image_parts[1]);
+            
+            $fileName = 'ttd_disposisi/' . uniqid() . '.' . $image_type;
+            Storage::disk('public')->put($fileName, $image_base64);
+            
+            $validated['ttd_image'] = $fileName;
+        } 
+        // Handle File Upload (Fallback/Alternative)
+        elseif ($request->hasFile('ttd_image')) {
             $validated['ttd_image'] = $request->file('ttd_image')->store('ttd_disposisi', 'public');
         }
 
@@ -434,7 +447,20 @@ class SipersuratController extends Controller
             'ttd_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        if ($request->hasFile('ttd_image')) {
+        // Handle Base64 Signature
+        if ($request->filled('ttd_signature_base64')) {
+            $image_parts = explode(";base64,", $request->ttd_signature_base64);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($image_parts[1]);
+            
+            $fileName = 'ttd_disposisi/' . uniqid() . '.' . $image_type;
+            Storage::disk('public')->put($fileName, $image_base64);
+            
+            $validated['ttd_image'] = $fileName;
+        } 
+        // Handle File Upload (Fallback/Alternative)
+        elseif ($request->hasFile('ttd_image')) {
             $validated['ttd_image'] = $request->file('ttd_image')->store('ttd_disposisi', 'public');
         }
 
