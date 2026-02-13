@@ -35,6 +35,10 @@
                     <input type="date" class="form-control" id="tgl_keluar" name="tgl_keluar" value="{{ date('Y-m-d') }}" required>
                 </div>
                 <div class="col-md-6">
+                    <label for="pengolah" class="form-label fw-bold">Pengolah / Dari</label>
+                    <input type="text" class="form-control" id="pengolah" name="pengolah" placeholder="Bagian yang membuat surat (Contoh: Bagian Umum)" required>
+                </div>
+                <div class="col-md-6">
                     <label for="tujuan" class="form-label fw-bold">Tujuan</label>
                     <input type="text" class="form-control" id="tujuan" name="tujuan" placeholder="Nama Instansi / Tujuan" required>
                 </div>

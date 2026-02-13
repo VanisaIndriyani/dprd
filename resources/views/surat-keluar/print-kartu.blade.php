@@ -135,7 +135,11 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="6">
+                    <td colspan="3">
+                        <span class="label">Dari / Pengolah</span>
+                        <div class="value handwriting">{{ $surat->pengolah ?? '-' }}</div>
+                    </td>
+                    <td colspan="3">
                         <span class="label">Tujuan Surat</span>
                         <div class="value handwriting">{{ $surat->tujuan }}</div>
                     </td>

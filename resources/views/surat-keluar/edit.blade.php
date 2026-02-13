@@ -36,6 +36,10 @@
                     <input type="date" class="form-control" id="tgl_keluar" name="tgl_keluar" value="{{ $surat->tgl_keluar }}" required>
                 </div>
                 <div class="col-md-6">
+                    <label for="pengolah" class="form-label fw-bold">Pengolah / Dari</label>
+                    <input type="text" class="form-control" id="pengolah" name="pengolah" value="{{ $surat->pengolah }}" placeholder="Bagian yang membuat surat" required>
+                </div>
+                <div class="col-md-6">
                     <label for="tujuan" class="form-label fw-bold">Tujuan</label>
                     <input type="text" class="form-control" id="tujuan" name="tujuan" value="{{ $surat->tujuan }}" required>
                 </div>

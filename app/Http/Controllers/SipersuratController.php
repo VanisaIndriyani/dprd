@@ -252,25 +252,25 @@ class SipersuratController extends Controller
     public function storeSuratKeluar(Request $request)
     {
         if (!session('is_logged_in')) return redirect()->route('login');
-        if (session('user_role') === 'Sekwan') return redirect()->route('surat-keluar');
 
         $validated = $request->validate([
             'no_surat' => 'required|unique:surat_keluars',
+            'tgl_keluar' => 'required|date',
+            'pengolah' => 'nullable',
             'tujuan' => 'required',
             'perihal' => 'required',
-            'tgl_keluar' => 'required|date',
-            'file_path' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240'
+            'file_path' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
         ]);
 
+        $validated['status'] = 'Draft'; // Default status
+
         if ($request->hasFile('file_path')) {
-            $validated['file_path'] = $request->file('file_path')->store('surat-keluar', 'public');
+            $validated['file_path'] = $request->file('file_path')->store('surat_keluar', 'public');
         }
 
-        $validated['status'] = 'Draft'; // Default status
-        
         SuratKeluar::create($validated);
 
-        return redirect()->route('surat-keluar')->with('success', 'Surat Keluar berhasil ditambahkan!');
+        return redirect()->route('surat-keluar')->with('success', 'Surat Keluar berhasil dibuat!');
     }
 
     public function editSuratKeluar($id)
@@ -285,24 +285,25 @@ class SipersuratController extends Controller
     public function updateSuratKeluar(Request $request, $id)
     {
         if (!session('is_logged_in')) return redirect()->route('login');
-        if (session('user_role') === 'Sekwan') return redirect()->route('surat-keluar');
 
         $surat = SuratKeluar::findOrFail($id);
 
         $validated = $request->validate([
-            'no_surat' => 'required|unique:surat_keluars,no_surat,'.$id,
+            'no_surat' => 'required|unique:surat_keluars,no_surat,' . $id,
+            'tgl_keluar' => 'required|date',
+            'pengolah' => 'nullable',
             'tujuan' => 'required',
             'perihal' => 'required',
-            'tgl_keluar' => 'required|date',
-            'file_path' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240',
-            'status' => 'required'
+            'status' => 'required',
+            'file_path' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
         ]);
 
         if ($request->hasFile('file_path')) {
-            if ($surat->file_path) {
+            // Delete old file
+            if ($surat->file_path && Storage::disk('public')->exists($surat->file_path)) {
                 Storage::disk('public')->delete($surat->file_path);
             }
-            $validated['file_path'] = $request->file('file_path')->store('surat-keluar', 'public');
+            $validated['file_path'] = $request->file('file_path')->store('surat_keluar', 'public');
         }
 
         $surat->update($validated);
@@ -408,6 +409,7 @@ class SipersuratController extends Controller
         // Saat Pimpinan kirim disposisi, otomatis muncul di Surat Keluar (Draft)
         SuratKeluar::create([
             'no_surat' => 'DRAFT-' . time(), // Nomor sementara, bisa diedit TU nanti
+            'pengolah' => 'Pimpinan DPRD', // Default Pengolah
             'tujuan'   => $validated['tujuan_disposisi'],
             'perihal'  => 'Tindak Lanjut Disposisi: ' . $surat->perihal,
             'tgl_keluar' => date('Y-m-d'),

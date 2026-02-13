@@ -8,7 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class SuratKeluar extends Model
 {
     use HasFactory;
-    protected $guarded = [];
+    protected $fillable = [
+        'no_surat',
+        'pengolah',
+        'tujuan',
+        'perihal',
+        'tgl_keluar',
+        'status',
+        'file_path',
+    ];
 
     public function disposisi()
     {
