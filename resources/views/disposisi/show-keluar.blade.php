@@ -185,7 +185,7 @@
                                         <span><i class="bi bi-pencil-square me-2"></i> Form Disposisi</span>
                                     </div>
                                     <div class="card-body bg-white">
-                                        <form action="{{ route('disposisi-keluar.store', $surat->id) }}" method="POST">
+                                        <form action="{{ route('disposisi-keluar.store', $surat->id) }}" method="POST" enctype="multipart/form-data">
                                             @csrf
                                             <div class="mb-3">
                                                 <label class="form-label small fw-bold text-dark">Diteruskan Kepada:</label>
@@ -271,6 +271,11 @@
                                                     <div class="col-12">
                                                         <label class="small text-muted">Nama Lengkap</label>
                                                         <input type="text" class="form-control form-control-sm" name="ttd_nama" value="{{ session('user_name') }}" required>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="small text-muted">Upload Tanda Tangan (Opsional)</label>
+                                                        <input type="file" class="form-control form-control-sm" name="ttd_image" accept="image/*">
+                                                        <div class="form-text small text-muted">Format: JPG, PNG. Jika diupload, akan menggantikan nama di kartu.</div>
                                                     </div>
                                                 </div>
                                             </div>

@@ -183,6 +183,20 @@
                     </td>
                 </tr>
             </table>
+
+            @if($disposisi)
+            <div style="margin-top: 20px; text-align: right; padding-right: 20px;">
+                <div style="display: inline-block; text-align: center;">
+                    <div style="font-size: 10pt; margin-bottom: 5px;">{{ $disposisi->ttd_jabatan }}</div>
+                    @if($disposisi->ttd_image)
+                        <img src="{{ asset('storage/' . $disposisi->ttd_image) }}" alt="TTD" style="height: 60px; margin: 5px 0;">
+                    @else
+                        <div style="height: 60px;"></div>
+                    @endif
+                    <div style="font-weight: bold; text-decoration: underline;">{{ $disposisi->ttd_nama }}</div>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 </body>

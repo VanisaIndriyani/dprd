@@ -375,7 +375,12 @@ class SipersuratController extends Controller
             'ttd_nama' => 'required',
             'ttd_jabatan' => 'required',
             'ttd_tanggal' => 'required|date',
+            'ttd_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        if ($request->hasFile('ttd_image')) {
+            $validated['ttd_image'] = $request->file('ttd_image')->store('ttd_disposisi', 'public');
+        }
 
         $validated['surat_masuk_id'] = $id;
         $validated['status'] = 'Disposisi';
@@ -426,7 +431,12 @@ class SipersuratController extends Controller
             'ttd_nama' => 'required',
             'ttd_jabatan' => 'required',
             'ttd_tanggal' => 'required|date',
+            'ttd_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        if ($request->hasFile('ttd_image')) {
+            $validated['ttd_image'] = $request->file('ttd_image')->store('ttd_disposisi', 'public');
+        }
 
         $validated['surat_keluar_id'] = $id;
         $validated['status'] = 'Disposisi';
