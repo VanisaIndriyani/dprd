@@ -138,11 +138,31 @@
                                                 <label class="form-label small fw-bold text-dark">Diteruskan Kepada:</label>
                                                 <select class="form-select form-select-sm" name="tujuan_disposisi" required>
                                                     <option value="" selected disabled>Pilih Tujuan...</option>
-                                                    <option value="Kepala Bagian Umum">Kepala Bagian Umum</option>
-                                                    <option value="Kepala Bagian Keuangan">Kepala Bagian Keuangan</option>
-                                                    <option value="Kepala Bagian Persidangan">Kepala Bagian Persidangan</option>
-                                                    <option value="Kepala Bagian Humas">Kepala Bagian Humas</option>
-                                                    <option value="Kasubbag Protokol">Kasubbag Protokol</option>
+                                                    <option value="KBU (Umum)">KBU (Umum)</option>
+                                                    <option value="KBK (Keuangan)">KBK (Keuangan)</option>
+                                                    <option value="KBP (Persidangan)">KBP (Persidangan)</option>
+                                                    <option value="KBH (Humas)">KBH (Humas)</option>
+                                                    <option value="RT">RT</option>
+                                                    <option value="Perlengkapan">Perlengkapan</option>
+                                                    
+                                                    <optgroup label="Komisi">
+                                                        <option value="Komisi 1">Komisi 1</option>
+                                                        <option value="Komisi 2">Komisi 2</option>
+                                                        <option value="Komisi 3">Komisi 3</option>
+                                                        <option value="Komisi 4">Komisi 4</option>
+                                                        <option value="Komisi 5">Komisi 5</option>
+                                                    </optgroup>
+
+                                                    <optgroup label="Fraksi Partai">
+                                                        <option value="Fraksi Golkar">Fraksi Golkar</option>
+                                                        <option value="Fraksi Gerindra">Fraksi Gerindra</option>
+                                                        <option value="Fraksi NasDem">Fraksi NasDem</option>
+                                                        <option value="Fraksi PDI-P">Fraksi PDI-P</option>
+                                                        <option value="Fraksi Demokrat">Fraksi Demokrat</option>
+                                                        <option value="Fraksi PKB">Fraksi PKB</option>
+                                                        <option value="Fraksi PKS">Fraksi PKS</option>
+                                                        <option value="Fraksi PAN">Fraksi PAN</option>
+                                                    </optgroup>
                                                 </select>
                                             </div>
                                             <div class="mb-3">
