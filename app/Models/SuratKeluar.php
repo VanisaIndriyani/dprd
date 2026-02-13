@@ -9,4 +9,9 @@ class SuratKeluar extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function disposisi()
+    {
+        return $this->hasMany(Disposisi::class);
+    }
 }

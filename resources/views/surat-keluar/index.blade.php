@@ -124,6 +124,12 @@
                                             @endif
                                         </li>
 
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('disposisi-keluar', $surat->id) }}">
+                                                <i class="bi bi-diagram-3 text-primary me-2"></i> Disposisi
+                                            </a>
+                                        </li>
+
                                         @if(session('user_role') !== 'Sekwan')
                                         <li><hr class="dropdown-divider"></li>
                                         <li>

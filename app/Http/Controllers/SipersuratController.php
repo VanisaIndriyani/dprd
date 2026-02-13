@@ -370,6 +370,52 @@ class SipersuratController extends Controller
         return redirect()->back()->with('success', 'Disposisi berhasil diselesaikan!');
     }
 
+    public function disposisiSuratKeluar($id)
+    {
+        if (!session('is_logged_in')) return redirect()->route('login');
+
+        $surat = SuratKeluar::findOrFail($id);
+        $disposisiList = Disposisi::where('surat_keluar_id', $id)->latest()->get();
+        
+        return view('disposisi.show-keluar', compact('surat', 'disposisiList'));
+    }
+
+    public function storeDisposisiSuratKeluar(Request $request, $id)
+    {
+        if (!session('is_logged_in')) return redirect()->route('login');
+        if (session('user_role') !== 'Sekwan') return redirect()->back()->with('error', 'Hanya Pimpinan yang dapat melakukan disposisi!');
+
+        $validated = $request->validate([
+            'tujuan_disposisi' => 'required',
+            'isi_disposisi' => 'required',
+            'catatan' => 'nullable',
+            'batas_waktu' => 'nullable|date',
+        ]);
+
+        $validated['surat_keluar_id'] = $id;
+        $validated['status'] = 'Disposisi';
+
+        Disposisi::create($validated);
+
+        // Update status surat keluar
+        $surat = SuratKeluar::findOrFail($id);
+        $surat->update(['status' => 'Disposisi']);
+
+        return redirect()->back()->with('success', 'Disposisi berhasil dikirim!');
+    }
+
+    public function finishDisposisiSuratKeluar($id)
+    {
+        if (!session('is_logged_in')) return redirect()->route('login');
+        // Allow Tata Usaha to mark as finished
+        if (session('user_role') !== 'Tata Usaha') return redirect()->back()->with('error', 'Hanya Admin TU yang dapat menyelesaikan disposisi!');
+
+        $surat = SuratKeluar::findOrFail($id);
+        $surat->update(['status' => 'Selesai']);
+
+        return redirect()->back()->with('success', 'Disposisi berhasil diselesaikan!');
+    }
+
     public function arsip(Request $request)
     {
         if (!session('is_logged_in')) return redirect()->route('login');

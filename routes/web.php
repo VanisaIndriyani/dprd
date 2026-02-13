@@ -32,6 +32,10 @@ Route::controller(SipersuratController::class)->group(function () {
     Route::post('/disposisi/{id}', 'storeDisposisi')->name('disposisi.store');
     Route::post('/disposisi/{id}/finish', 'finishDisposisi')->name('disposisi.finish');
     
+    Route::get('/disposisi-keluar/{id}', 'disposisiSuratKeluar')->name('disposisi-keluar');
+    Route::post('/disposisi-keluar/{id}', 'storeDisposisiSuratKeluar')->name('disposisi-keluar.store');
+    Route::post('/disposisi-keluar/{id}/finish', 'finishDisposisiSuratKeluar')->name('disposisi-keluar.finish');
+    
     Route::get('/arsip', 'arsip')->name('arsip');
     
     Route::get('/profile', 'profile')->name('profile');
