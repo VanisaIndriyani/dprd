@@ -124,8 +124,9 @@
                                                     <small class="d-block fw-bold text-dark mb-1">{{ $disposisi->ttd_jabatan ?? 'Sekretaris DPRD' }}</small>
                                                     <small class="d-block text-muted mb-1">Paraf & Tanggal: {{ $disposisi->ttd_tanggal ? \Carbon\Carbon::parse($disposisi->ttd_tanggal)->format('d/m/Y') : '-' }}</small>
                                                     @if($disposisi->ttd_image)
-                                                        <img src="{{ asset('storage/' . $disposisi->ttd_image) }}" alt="TTD" class="d-block" style="height: 60px; margin: 5px 0 5px auto;">
+                                                        <img src="{{ asset('storage/' . $disposisi->ttd_image) }}" alt="TTD" class="d-block mx-auto" style="height: 60px; margin: 5px auto;">
                                                     @else
+
                                                         <div style="height: 60px;"></div>
                                                     @endif
                                                     <div class="fw-bold text-dark border-bottom border-dark pb-1 d-inline-block px-3">{{ $disposisi->ttd_nama ?? 'Pimpinan' }}</div>
