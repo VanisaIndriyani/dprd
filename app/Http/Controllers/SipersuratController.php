@@ -107,7 +107,7 @@ class SipersuratController extends Controller
             });
         }
 
-        $suratMasuk = $query->get();
+        $suratMasuk = $query->paginate(10);
         return view('surat-masuk.index', compact('suratMasuk'));
     }
 
@@ -125,9 +125,11 @@ class SipersuratController extends Controller
         if (session('user_role') === 'Sekwan') return redirect()->route('surat-masuk');
 
         $validated = $request->validate([
+            'no_agenda' => 'required',
             'no_surat' => 'required|unique:surat_masuks',
             'pengirim' => 'required',
             'perihal' => 'required',
+            'tgl_surat' => 'required|date',
             'tgl_terima' => 'required|date',
             'file_path' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240'
         ]);
@@ -160,9 +162,11 @@ class SipersuratController extends Controller
         $surat = SuratMasuk::findOrFail($id);
 
         $validated = $request->validate([
+            'no_agenda' => 'required',
             'no_surat' => 'required|unique:surat_masuks,no_surat,'.$id,
             'pengirim' => 'required',
             'perihal' => 'required',
+            'tgl_surat' => 'required|date',
             'tgl_terima' => 'required|date',
             'file_path' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240'
         ]);
@@ -196,6 +200,28 @@ class SipersuratController extends Controller
         return redirect()->route('surat-masuk')->with('success', 'Surat Masuk berhasil dihapus!');
     }
 
+    public function printKartuSuratMasuk($id)
+    {
+        if (!session('is_logged_in')) return redirect()->route('login');
+
+        $surat = SuratMasuk::findOrFail($id);
+        // Get the latest disposisi for this surat to show the destination
+        $disposisi = Disposisi::where('surat_masuk_id', $id)->latest()->first();
+
+        return view('surat-masuk.print-kartu', compact('surat', 'disposisi'));
+    }
+
+    public function printKartuSuratKeluar($id)
+    {
+        if (!session('is_logged_in')) return redirect()->route('login');
+
+        $surat = SuratKeluar::findOrFail($id);
+        // Get the latest disposisi for this surat to show the destination
+        $disposisi = Disposisi::where('surat_keluar_id', $id)->latest()->first();
+
+        return view('surat-keluar.print-kartu', compact('surat', 'disposisi'));
+    }
+
     public function suratKeluar(Request $request)
     {
         if (!session('is_logged_in')) return redirect()->route('login');
@@ -211,7 +237,7 @@ class SipersuratController extends Controller
             });
         }
 
-        $suratKeluar = $query->get();
+        $suratKeluar = $query->paginate(10);
         return view('surat-keluar.index', compact('suratKeluar'));
     }
 
@@ -342,9 +368,13 @@ class SipersuratController extends Controller
         $validated = $request->validate([
             'tujuan_disposisi' => 'required',
             'sifat' => 'required',
-            'isi_disposisi' => 'required',
+            'instruksi_pilihan' => 'nullable|array',
+            'isi_disposisi' => 'nullable',
             'catatan' => 'nullable',
             'batas_waktu' => 'nullable|date',
+            'ttd_nama' => 'required',
+            'ttd_jabatan' => 'required',
+            'ttd_tanggal' => 'required|date',
         ]);
 
         $validated['surat_masuk_id'] = $id;
@@ -389,9 +419,13 @@ class SipersuratController extends Controller
         $validated = $request->validate([
             'tujuan_disposisi' => 'required',
             'sifat' => 'required',
-            'isi_disposisi' => 'required',
+            'instruksi_pilihan' => 'nullable|array',
+            'isi_disposisi' => 'nullable',
             'catatan' => 'nullable',
             'batas_waktu' => 'nullable|date',
+            'ttd_nama' => 'required',
+            'ttd_jabatan' => 'required',
+            'ttd_tanggal' => 'required|date',
         ]);
 
         $validated['surat_keluar_id'] = $id;

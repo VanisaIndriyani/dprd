@@ -63,7 +63,7 @@
                             <th scope="col" class="py-3" width="30%">Perihal</th>
                             <th scope="col" class="py-3" width="20%">No. Surat / Tgl</th>
                             <th scope="col" class="py-3" width="15%">Status</th>
-                            <th scope="col" class="text-end pe-4 py-3" width="10%">Aksi</th>
+                            <th scope="col" class="text-end pe-4 py-3" width="20%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -104,50 +104,39 @@
                                 @endif
                             </td>
                             <td class="text-end pe-4">
-                                <div class="dropdown">
-                                    <button class="btn btn-light btn-sm rounded-circle shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-three-dots-vertical"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-                                        <li><h6 class="dropdown-header">Aksi</h6></li>
-                                        
-                                        <!-- View File -->
-                                        <li>
-                                            @if($surat->file_path)
-                                            <a class="dropdown-item" href="{{ route('surat-keluar.file', $surat->id) }}" target="_blank">
-                                                <i class="bi bi-file-earmark-pdf text-danger me-2"></i> Lihat File
-                                            </a>
-                                            @else
-                                            <span class="dropdown-item disabled text-muted">
-                                                <i class="bi bi-file-earmark-x me-2"></i> Tidak ada file
-                                            </span>
-                                            @endif
-                                        </li>
+                                <div class="d-flex justify-content-end gap-1">
+                                    <!-- View File -->
+                                    @if($surat->file_path)
+                                    <a href="{{ route('surat-keluar.file', $surat->id) }}" target="_blank" class="btn btn-sm btn-outline-danger" title="Lihat File">
+                                        <i class="bi bi-file-earmark-pdf"></i>
+                                    </a>
+                                    @endif
 
-                                        <li>
-                                            <a class="dropdown-item" href="{{ route('disposisi-keluar', $surat->id) }}">
-                                                <i class="bi bi-diagram-3 text-primary me-2"></i> Disposisi
-                                            </a>
-                                        </li>
+                                    <!-- Disposisi -->
+                                    <a href="{{ route('disposisi-keluar', $surat->id) }}" class="btn btn-sm btn-outline-primary" title="Disposisi">
+                                        <i class="bi bi-diagram-3"></i>
+                                    </a>
 
-                                        @if(session('user_role') !== 'Sekwan')
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li>
-                                            <a class="dropdown-item" href="{{ route('surat-keluar.edit', $surat->id) }}">
-                                                <i class="bi bi-pencil text-warning me-2"></i> Edit
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <form action="{{ route('surat-keluar.destroy', $surat->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus surat ini?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="dropdown-item text-danger">
-                                                    <i class="bi bi-trash me-2"></i> Hapus
-                                                </button>
-                                            </form>
-                                        </li>
-                                        @endif
-                                    </ul>
+                                    <!-- Print Kartu -->
+                                    <a href="{{ route('surat-keluar.print', $surat->id) }}" target="_blank" class="btn btn-sm btn-outline-dark" title="Cetak Kartu">
+                                        <i class="bi bi-printer"></i>
+                                    </a>
+
+                                    @if(session('user_role') !== 'Sekwan')
+                                    <!-- Edit -->
+                                    <a href="{{ route('surat-keluar.edit', $surat->id) }}" class="btn btn-sm btn-outline-warning" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    
+                                    <!-- Hapus -->
+                                    <form action="{{ route('surat-keluar.destroy', $surat->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus surat ini?');" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -166,7 +155,9 @@
             </div>
         </div>
         <div class="card-footer bg-white border-top-0 py-3">
-            <!-- Pagination could go here -->
+            <div class="d-flex justify-content-end">
+                {{ $suratKeluar->withQueryString()->links('pagination::bootstrap-5') }}
+            </div>
         </div>
     </div>
 </div>

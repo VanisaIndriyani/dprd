@@ -28,16 +28,24 @@
             @method('PUT')
             <div class="row g-3">
                 <div class="col-md-6">
+                    <label for="no_agenda" class="form-label fw-bold">No Agenda</label>
+                    <input type="text" class="form-control" id="no_agenda" name="no_agenda" value="{{ $surat->no_agenda }}" required>
+                </div>
+                <div class="col-md-6">
                     <label for="no_surat" class="form-label fw-bold">Nomor Surat</label>
                     <input type="text" class="form-control" id="no_surat" name="no_surat" value="{{ $surat->no_surat }}" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="tgl_terima" class="form-label fw-bold">Tanggal Terima</label>
-                    <input type="date" class="form-control" id="tgl_terima" name="tgl_terima" value="{{ $surat->tgl_terima }}" required>
-                </div>
-                <div class="col-md-6">
                     <label for="pengirim" class="form-label fw-bold">Pengirim</label>
                     <input type="text" class="form-control" id="pengirim" name="pengirim" value="{{ $surat->pengirim }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="tgl_surat" class="form-label fw-bold">Tanggal Surat</label>
+                    <input type="date" class="form-control" id="tgl_surat" name="tgl_surat" value="{{ $surat->tgl_surat }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="tgl_terima" class="form-label fw-bold">Tanggal Terima</label>
+                    <input type="date" class="form-control" id="tgl_terima" name="tgl_terima" value="{{ $surat->tgl_terima }}" required>
                 </div>
                 <div class="col-md-6">
                     <label for="file_path" class="form-label fw-bold">File Surat (Biarkan kosong jika tidak diubah)</label>

@@ -17,8 +17,10 @@ Route::controller(SipersuratController::class)->group(function () {
     Route::get('/surat-masuk/{id}/edit', 'editSuratMasuk')->name('surat-masuk.edit');
     Route::put('/surat-masuk/{id}', 'updateSuratMasuk')->name('surat-masuk.update');
     Route::delete('/surat-masuk/{id}', 'destroySuratMasuk')->name('surat-masuk.destroy');
+    Route::get('/surat-masuk/{id}/print', 'printKartuSuratMasuk')->name('surat-masuk.print');
     
     Route::get('/surat-keluar', 'suratKeluar')->name('surat-keluar');
+    Route::get('/surat-keluar/{id}/print', 'printKartuSuratKeluar')->name('surat-keluar.print');
     Route::get('/surat-keluar/create', 'createSuratKeluar')->name('surat-keluar.create');
     Route::post('/surat-keluar', 'storeSuratKeluar')->name('surat-keluar.store');
     Route::get('/surat-keluar/{id}/edit', 'editSuratKeluar')->name('surat-keluar.edit');

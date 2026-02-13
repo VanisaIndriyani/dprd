@@ -10,6 +10,10 @@ class Disposisi extends Model
     use HasFactory;
     protected $guarded = [];
 
+    protected $casts = [
+        'instruksi_pilihan' => 'array',
+    ];
+
     public function suratMasuk()
     {
         return $this->belongsTo(SuratMasuk::class);

@@ -5,9 +5,14 @@
     <!-- Page Header -->
     <div class="row mb-4 align-items-center">
         <div class="col-12">
-            <a href="{{ route('surat-masuk') }}" class="btn btn-outline-secondary btn-sm mb-3">
-                <i class="bi bi-arrow-left"></i> Kembali
-            </a>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="{{ route('surat-masuk') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> Kembali
+                </a>
+                <a href="{{ route('surat-masuk.print', $surat->id) }}" target="_blank" class="btn btn-light btn-sm shadow-sm text-dark border">
+                    <i class="bi bi-printer-fill me-2"></i> Cetak Kartu Disposisi
+                </a>
+            </div>
             <div class="card border-0 shadow-sm bg-gold text-white" style="background: linear-gradient(135deg, #198754 0%, #20c997 100%);">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center">
@@ -65,7 +70,18 @@
                                             </div>
                                             <div class="col-12">
                                                 <small class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem;">INSTRUKSI</small>
+                                                
+                                                @if($disposisi->instruksi_pilihan)
+                                                    <ul class="mb-1 ps-3 text-dark small">
+                                                        @foreach($disposisi->instruksi_pilihan as $pilihan)
+                                                            <li>{{ $pilihan }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                @endif
+                                                
+                                                @if($disposisi->isi_disposisi)
                                                 <div class="text-dark">{{ $disposisi->isi_disposisi }}</div>
+                                                @endif
                                             </div>
                                             <div class="col-12 mt-2 pt-2 border-top">
                                                 <div class="row">
@@ -101,6 +117,15 @@
                                                 <div class="fst-italic text-muted">"{{ $disposisi->catatan }}"</div>
                                             </div>
                                             @endif
+                                            
+                                            <!-- TTD Display -->
+                                            <div class="col-12 mt-3 pt-3 border-top text-end">
+                                                <div class="d-inline-block text-center" style="min-width: 150px;">
+                                                    <small class="d-block fw-bold text-dark mb-1">{{ $disposisi->ttd_jabatan ?? 'Sekretaris DPRD' }}</small>
+                                                    <small class="d-block text-muted mb-4">Paraf & Tanggal: {{ $disposisi->ttd_tanggal ? \Carbon\Carbon::parse($disposisi->ttd_tanggal)->format('d/m/Y') : '-' }}</small>
+                                                    <div class="fw-bold text-dark border-bottom border-dark pb-1 d-inline-block px-3">{{ $disposisi->ttd_nama ?? 'Pimpinan' }}</div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -140,6 +165,10 @@
                                             <i class="bi bi-check-circle me-1"></i> Tandai Selesai
                                         </button>
                                     </form>
+                                    <div class="mt-2 text-center">
+                                        <small class="text-muted">Atau buat Surat Keluar sebagai tindak lanjut:</small>
+                                        <a href="{{ route('surat-keluar.create') }}" class="btn btn-outline-dark btn-sm w-100 mt-1"><i class="bi bi-envelope-plus me-2"></i> Buat Surat Keluar</a>
+                                    </div>
                                 </div>
                                 @endif
                             </div>
@@ -194,8 +223,22 @@
                                                 </select>
                                             </div>
                                             <div class="mb-3">
-                                                <label class="form-label small fw-bold text-dark">Isi Instruksi:</label>
-                                                <textarea class="form-control form-control-sm" name="isi_disposisi" rows="3" placeholder="Contoh: Segera tindak lanjuti..." required></textarea>
+                                                <label class="form-label small fw-bold text-dark">Instruksi / Harap:</label>
+                                                <div class="bg-light p-3 rounded border">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="instruksi_pilihan[]" value="Tanggapan dan Saran" id="check1">
+                                                        <label class="form-check-label" for="check1">Tanggapan dan Saran</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="instruksi_pilihan[]" value="Proses lebih lanjut" id="check2">
+                                                        <label class="form-check-label" for="check2">Proses lebih lanjut</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="instruksi_pilihan[]" value="Koordinasi/Konfirmasikan" id="check3">
+                                                        <label class="form-check-label" for="check3">Koordinasi/Konfirmasikan</label>
+                                                    </div>
+                                                </div>
+                                                <textarea class="form-control form-control-sm mt-2" name="isi_disposisi" rows="2" placeholder="Instruksi tambahan lainnya..."></textarea>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
@@ -217,6 +260,25 @@
                                                 <label class="form-label small fw-bold text-dark">Catatan (Opsional):</label>
                                                 <input type="text" class="form-control form-control-sm" name="catatan">
                                             </div>
+
+                                            <div class="mb-4">
+                                                <label class="form-label small fw-bold text-dark border-bottom w-100 pb-1">Tanda Tangan</label>
+                                                <div class="row g-2">
+                                                    <div class="col-md-6">
+                                                        <label class="small text-muted">Jabatan</label>
+                                                        <input type="text" class="form-control form-control-sm bg-light" name="ttd_jabatan" value="Sekretaris DPRD" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="small text-muted">Tanggal</label>
+                                                        <input type="date" class="form-control form-control-sm bg-light" name="ttd_tanggal" value="{{ date('Y-m-d') }}" readonly>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label class="small text-muted">Nama Lengkap</label>
+                                                        <input type="text" class="form-control form-control-sm" name="ttd_nama" value="{{ session('user_name') }}" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <button type="submit" class="btn btn-sm btn-dark w-100 fw-bold"><i class="bi bi-send-fill me-2"></i> Kirim Disposisi</button>
                                         </form>
                                     </div>
@@ -247,7 +309,11 @@
                 <div class="card-body">
                     <table class="table table-borderless table-sm mb-0">
                         <tr>
-                            <td class="text-muted w-35 small text-uppercase fw-bold">No Surat</td>
+                            <td class="text-muted w-35 small text-uppercase fw-bold">No Agenda</td>
+                            <td class="fw-bold text-dark">{{ $surat->no_agenda ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted small text-uppercase fw-bold">No Surat</td>
                             <td class="fw-bold text-dark">{{ $surat->no_surat }}</td>
                         </tr>
                         <tr>
@@ -255,7 +321,11 @@
                             <td class="fw-bold text-dark">{{ $surat->pengirim }}</td>
                         </tr>
                         <tr>
-                            <td class="text-muted small text-uppercase fw-bold">Tanggal</td>
+                            <td class="text-muted small text-uppercase fw-bold">Tgl Surat</td>
+                            <td class="text-dark">{{ $surat->tgl_surat ? \Carbon\Carbon::parse($surat->tgl_surat)->format('d M Y') : '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted small text-uppercase fw-bold">Tgl Terima</td>
                             <td class="text-dark">{{ \Carbon\Carbon::parse($surat->tgl_terima)->format('d M Y') }}</td>
                         </tr>
                         <tr>

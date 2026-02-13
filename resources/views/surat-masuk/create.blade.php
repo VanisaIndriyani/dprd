@@ -27,16 +27,24 @@
             @csrf
             <div class="row g-3">
                 <div class="col-md-6">
+                    <label for="no_agenda" class="form-label fw-bold">No Agenda</label>
+                    <input type="text" class="form-control" id="no_agenda" name="no_agenda" placeholder="Contoh: 12345" required>
+                </div>
+                <div class="col-md-6">
                     <label for="no_surat" class="form-label fw-bold">Nomor Surat</label>
                     <input type="text" class="form-control" id="no_surat" name="no_surat" placeholder="Contoh: 001/DINAS/2026" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="tgl_terima" class="form-label fw-bold">Tanggal Terima</label>
-                    <input type="date" class="form-control" id="tgl_terima" name="tgl_terima" value="{{ date('Y-m-d') }}" required>
+                    <label for="pengirim" class="form-label fw-bold">Surat Dari</label>
+                    <input type="text" class="form-control" id="pengirim" name="pengirim" placeholder="Nama Instansi / Pengirim" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="pengirim" class="form-label fw-bold">Pengirim</label>
-                    <input type="text" class="form-control" id="pengirim" name="pengirim" placeholder="Nama Instansi / Pengirim" required>
+                    <label for="tgl_surat" class="form-label fw-bold">Tanggal Surat</label>
+                    <input type="date" class="form-control" id="tgl_surat" name="tgl_surat" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="tgl_terima" class="form-label fw-bold">Tanggal Terima</label>
+                    <input type="date" class="form-control" id="tgl_terima" name="tgl_terima" value="{{ date('Y-m-d') }}" required>
                 </div>
                 <div class="col-md-6">
                     <label for="file_path" class="form-label fw-bold">File Surat (Opsional)</label>

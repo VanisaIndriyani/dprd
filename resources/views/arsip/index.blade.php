@@ -65,7 +65,7 @@
                             <th scope="col" class="py-3" width="25%">Perihal</th>
                             <th scope="col" class="py-3" width="15%">Tgl Surat</th>
                             <th scope="col" class="py-3" width="10%">Status</th>
-                            <th scope="col" class="text-end pe-4 py-3" width="10%">Aksi</th>
+                            <th scope="col" class="text-end pe-4 py-3" width="15%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -93,41 +93,30 @@
                                 <span class="badge bg-secondary bg-opacity-75 rounded-pill px-3">{{ $item->status }}</span>
                             </td>
                             <td class="text-end pe-4">
-                                <div class="dropdown">
-                                    <button class="btn btn-light btn-sm rounded-circle shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-three-dots-vertical"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-                                        <li><h6 class="dropdown-header">Aksi</h6></li>
-                                        
-                                        <!-- View File -->
-                                        <li>
-                                            @if($item->file_path)
-                                                @if($item->jenis == 'Surat Masuk')
-                                                <a class="dropdown-item" href="{{ route('surat-masuk.file', $item->id) }}" target="_blank">
-                                                    <i class="bi bi-file-earmark-pdf text-danger me-2"></i> Lihat File
-                                                </a>
-                                                @else
-                                                <a class="dropdown-item" href="{{ route('surat-keluar.file', $item->id) }}" target="_blank">
-                                                    <i class="bi bi-file-earmark-pdf text-danger me-2"></i> Lihat File
-                                                </a>
-                                                @endif
-                                            @else
-                                            <span class="dropdown-item disabled text-muted">
-                                                <i class="bi bi-file-earmark-x me-2"></i> Tidak ada file
-                                            </span>
-                                            @endif
-                                        </li>
-
-                                        <!-- Detail Link -->
+                                <div class="d-flex justify-content-end gap-1">
+                                    <!-- View File -->
+                                    @if($item->file_path)
                                         @if($item->jenis == 'Surat Masuk')
-                                        <li>
-                                            <a class="dropdown-item" href="{{ route('disposisi', $item->id) }}">
-                                                <i class="bi bi-info-circle text-primary me-2"></i> Detail & Disposisi
-                                            </a>
-                                        </li>
+                                        <a href="{{ route('surat-masuk.file', $item->id) }}" target="_blank" class="btn btn-sm btn-outline-danger" title="Lihat File">
+                                            <i class="bi bi-file-earmark-pdf"></i>
+                                        </a>
+                                        @else
+                                        <a href="{{ route('surat-keluar.file', $item->id) }}" target="_blank" class="btn btn-sm btn-outline-danger" title="Lihat File">
+                                            <i class="bi bi-file-earmark-pdf"></i>
+                                        </a>
                                         @endif
-                                    </ul>
+                                    @endif
+
+                                    <!-- Detail/Disposisi -->
+                                    @if($item->jenis == 'Surat Masuk')
+                                        <a href="{{ route('disposisi', $item->id) }}" class="btn btn-sm btn-outline-primary" title="Detail & Disposisi">
+                                            <i class="bi bi-info-circle"></i>
+                                        </a>
+                                    @else
+                                        <a href="{{ route('disposisi-keluar', $item->id) }}" class="btn btn-sm btn-outline-primary" title="Detail & Disposisi">
+                                            <i class="bi bi-info-circle"></i>
+                                        </a>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

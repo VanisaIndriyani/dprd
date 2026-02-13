@@ -59,17 +59,21 @@
                     <thead class="bg-light text-secondary">
                         <tr>
                             <th scope="col" class="ps-4 py-3" width="5%">No</th>
-                            <th scope="col" class="py-3" width="25%">Info Surat</th>
-                            <th scope="col" class="py-3" width="30%">Perihal</th>
-                            <th scope="col" class="py-3" width="15%">Tgl Terima</th>
+                            <th scope="col" class="py-3" width="10%">No Agenda</th>
+                            <th scope="col" class="py-3" width="20%">Info Surat</th>
+                            <th scope="col" class="py-3" width="25%">Perihal</th>
+                            <th scope="col" class="py-3" width="15%">Tanggal</th>
                             <th scope="col" class="py-3" width="15%">Status</th>
-                            <th scope="col" class="text-end pe-4 py-3" width="10%">Aksi</th>
+                            <th scope="col" class="text-end pe-4 py-3" width="20%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($suratMasuk as $index => $surat)
                         <tr>
                             <td class="ps-4 fw-bold text-muted">{{ $index + 1 }}</td>
+                            <td>
+                                <span class="badge bg-light text-dark border">{{ $surat->no_agenda ?? '-' }}</span>
+                            </td>
                             <td>
                                 <div class="d-flex align-items-center">
                                     <div class="bg-light rounded-circle p-2 me-3 d-flex justify-content-center align-items-center" style="width: 40px; height: 40px;">
@@ -86,8 +90,8 @@
                             </td>
                             <td>
                                 <div class="text-secondary small">
-                                    <i class="bi bi-calendar3 me-1"></i>
-                                    {{ \Carbon\Carbon::parse($surat->tgl_terima)->format('d M Y') }}
+                                    <div class="mb-1"><i class="bi bi-calendar-event me-1"></i> Surat: {{ $surat->tgl_surat ? \Carbon\Carbon::parse($surat->tgl_surat)->format('d M Y') : '-' }}</div>
+                                    <div><i class="bi bi-calendar-check me-1"></i> Terima: {{ \Carbon\Carbon::parse($surat->tgl_terima)->format('d M Y') }}</div>
                                 </div>
                             </td>
                             <td>
@@ -108,51 +112,39 @@
                                 @endif
                             </td>
                             <td class="text-end pe-4">
-                                <div class="dropdown">
-                                    <button class="btn btn-light btn-sm rounded-circle shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-three-dots-vertical"></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-                                        <li><h6 class="dropdown-header">Aksi</h6></li>
-                                        
-                                        <!-- View File -->
-                                        <li>
-                                            @if($surat->file_path)
-                                            <a class="dropdown-item" href="{{ route('surat-masuk.file', $surat->id) }}" target="_blank">
-                                                <i class="bi bi-file-earmark-pdf text-danger me-2"></i> Lihat File
-                                            </a>
-                                            @else
-                                            <span class="dropdown-item disabled text-muted">
-                                                <i class="bi bi-file-earmark-x me-2"></i> Tidak ada file
-                                            </span>
-                                            @endif
-                                        </li>
+                                <div class="d-flex justify-content-end gap-1">
+                                    <!-- View File -->
+                                    @if($surat->file_path)
+                                    <a href="{{ route('surat-masuk.file', $surat->id) }}" target="_blank" class="btn btn-sm btn-outline-danger" title="Lihat File">
+                                        <i class="bi bi-file-earmark-pdf"></i>
+                                    </a>
+                                    @endif
 
-                                        <!-- Detail/Disposisi -->
-                                        <li>
-                                            <a class="dropdown-item" href="{{ route('disposisi', $surat->id) }}">
-                                                <i class="bi bi-info-circle text-primary me-2"></i> Detail / Disposisi
-                                            </a>
-                                        </li>
+                                    <!-- Detail/Disposisi -->
+                                    <a href="{{ route('disposisi', $surat->id) }}" class="btn btn-sm btn-outline-primary" title="Detail / Disposisi">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+                                    
+                                    <!-- Cetak Kartu -->
+                                    <a href="{{ route('surat-masuk.print', $surat->id) }}" target="_blank" class="btn btn-sm btn-outline-dark" title="Cetak Kartu">
+                                        <i class="bi bi-printer"></i>
+                                    </a>
 
-                                        @if(session('user_role') !== 'Sekwan')
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li>
-                                            <a class="dropdown-item" href="{{ route('surat-masuk.edit', $surat->id) }}">
-                                                <i class="bi bi-pencil text-warning me-2"></i> Edit
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <form action="{{ route('surat-masuk.destroy', $surat->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus surat ini?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="dropdown-item text-danger">
-                                                    <i class="bi bi-trash me-2"></i> Hapus
-                                                </button>
-                                            </form>
-                                        </li>
-                                        @endif
-                                    </ul>
+                                    @if(session('user_role') !== 'Sekwan')
+                                    <!-- Edit -->
+                                    <a href="{{ route('surat-masuk.edit', $surat->id) }}" class="btn btn-sm btn-outline-warning" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    
+                                    <!-- Hapus -->
+                                    <form action="{{ route('surat-masuk.destroy', $surat->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus surat ini?');" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -171,7 +163,9 @@
             </div>
         </div>
         <div class="card-footer bg-white border-top-0 py-3">
-            <!-- Pagination could go here -->
+            <div class="d-flex justify-content-end">
+                {{ $suratMasuk->withQueryString()->links('pagination::bootstrap-5') }}
+            </div>
         </div>
     </div>
 </div>
