@@ -404,7 +404,18 @@ class SipersuratController extends Controller
         $surat = SuratMasuk::findOrFail($id);
         $surat->update(['status' => 'Disposisi']);
 
-        return redirect()->back()->with('success', 'Disposisi berhasil dikirim!');
+        // AUTO-CREATE DRAFT SURAT KELUAR (Sesuai Request: Alur Otomatis ke TU)
+        // Saat Pimpinan kirim disposisi, otomatis muncul di Surat Keluar (Draft)
+        SuratKeluar::create([
+            'no_surat' => 'DRAFT-' . time(), // Nomor sementara, bisa diedit TU nanti
+            'tujuan'   => $validated['tujuan_disposisi'],
+            'perihal'  => 'Tindak Lanjut Disposisi: ' . $surat->perihal,
+            'tgl_keluar' => date('Y-m-d'),
+            'status'   => 'Draft', // Status Draft agar TU bisa melengkapi
+            'file_path' => null
+        ]);
+
+        return redirect()->back()->with('success', 'Disposisi berhasil dikirim & Draft Surat Keluar otomatis dibuat!');
     }
 
     public function finishDisposisi($id)
