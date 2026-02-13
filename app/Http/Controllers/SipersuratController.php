@@ -341,6 +341,7 @@ class SipersuratController extends Controller
 
         $validated = $request->validate([
             'tujuan_disposisi' => 'required',
+            'sifat' => 'required',
             'isi_disposisi' => 'required',
             'catatan' => 'nullable',
             'batas_waktu' => 'nullable|date',
@@ -387,6 +388,7 @@ class SipersuratController extends Controller
 
         $validated = $request->validate([
             'tujuan_disposisi' => 'required',
+            'sifat' => 'required',
             'isi_disposisi' => 'required',
             'catatan' => 'nullable',
             'batas_waktu' => 'nullable|date',

@@ -67,6 +67,34 @@
                                                 <small class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem;">INSTRUKSI</small>
                                                 <div class="text-dark">{{ $disposisi->isi_disposisi }}</div>
                                             </div>
+                                            <div class="col-12 mt-2 pt-2 border-top">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <small class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem;">SIFAT</small>
+                                                        <div>
+                                                            @if($disposisi->sifat == 'Segera')
+                                                                <span class="badge bg-warning text-dark"><i class="bi bi-exclamation-circle me-1"></i> Segera</span>
+                                                            @elseif($disposisi->sifat == 'Sangat Segera')
+                                                                <span class="badge bg-danger"><i class="bi bi-exclamation-triangle me-1"></i> Sangat Segera</span>
+                                                            @elseif($disposisi->sifat == 'Rahasia')
+                                                                <span class="badge bg-dark"><i class="bi bi-eye-slash me-1"></i> Rahasia</span>
+                                                            @else
+                                                                <span class="badge bg-secondary">Biasa</span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <small class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem;">BATAS WAKTU</small>
+                                                        <div class="fw-bold text-danger">
+                                                            @if($disposisi->batas_waktu)
+                                                                <i class="bi bi-calendar-event me-1"></i> {{ \Carbon\Carbon::parse($disposisi->batas_waktu)->format('d M Y') }}
+                                                            @else
+                                                                -
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             @if($disposisi->catatan)
                                             <div class="col-12 mt-2 pt-2 border-top">
                                                 <small class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem;">CATATAN</small>
@@ -171,13 +199,23 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label small fw-bold text-dark">Catatan (Opsional):</label>
-                                                    <input type="text" class="form-control form-control-sm" name="catatan">
+                                                    <label class="form-label small fw-bold text-dark">Sifat Surat:</label>
+                                                    <select class="form-select form-select-sm" name="sifat" required>
+                                                        <option value="" selected disabled>Pilih Sifat...</option>
+                                                        <option value="Biasa">Biasa</option>
+                                                        <option value="Segera">Segera</option>
+                                                        <option value="Sangat Segera">Sangat Segera</option>
+                                                        <option value="Rahasia">Rahasia</option>
+                                                    </select>
                                                 </div>
                                                 <div class="col-md-6 mb-3">
                                                     <label class="form-label small fw-bold text-dark">Batas Waktu:</label>
                                                     <input type="date" class="form-control form-control-sm" name="batas_waktu">
                                                 </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label small fw-bold text-dark">Catatan (Opsional):</label>
+                                                <input type="text" class="form-control form-control-sm" name="catatan">
                                             </div>
                                             <button type="submit" class="btn btn-sm btn-dark w-100 fw-bold"><i class="bi bi-send-fill me-2"></i> Kirim Disposisi</button>
                                         </form>
