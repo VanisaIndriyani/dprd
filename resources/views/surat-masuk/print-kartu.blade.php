@@ -5,30 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak Kartu Surat Masuk - {{ $surat->no_surat }}</title>
     <style>
+        .print-wrapper {
+            width: 100%;
+        }
         @media print {
             @page {
                 size: A5 landscape;
-                margin: 10mm;
+                margin: 6mm;
             }
             body {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+                margin: 0;
+                padding: 0;
             }
             .no-print {
                 display: none;
             }
+            .print-wrapper {
+                transform: scale(0.85);
+                transform-origin: top left;
+            }
         }
         body {
             font-family: Arial, sans-serif;
-            font-size: 12pt;
+            font-size: 11pt;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
         }
         .container {
             width: 100%;
             border: 2px solid #000;
             padding: 0;
             position: relative;
+            page-break-inside: avoid;
         }
         .header-side {
             position: absolute;
@@ -52,13 +62,39 @@
         .content {
             margin-left: 40px;
         }
+        .header-top {
+            text-align: center;
+            padding: 8px 12px 6px;
+            border-bottom: 1px solid #000;
+        }
+        .header-top-table {
+            width: 100%;
+        }
+        .header-top-logo {
+            width: 15%;
+        }
+        .header-top-text-main {
+            font-size: 11pt;
+            font-weight: bold;
+        }
+        .header-top-text-sub {
+            font-size: 9pt;
+        }
+        .title-disposisi {
+            text-align: center;
+            font-size: 12pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 6px;
+            margin-bottom: 4px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
         }
         td {
             border: 1px solid #000;
-            padding: 5px 8px;
+            padding: 4px 6px;
             vertical-align: top;
         }
         .label {
@@ -69,11 +105,11 @@
         }
         .value {
             font-weight: bold;
-            font-size: 12pt;
+            font-size: 11pt;
         }
         .handwriting {
-            font-family: 'Courier New', Courier, monospace; /* Fallback for handwriting style */
-            font-size: 14pt;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12pt;
             color: #000;
         }
         .row-header td {
@@ -92,12 +128,29 @@
         <button onclick="window.close()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Tutup</button>
     </div>
 
-    <div class="container">
-        <div class="header-side">
-            <h2>Kartu Surat Masuk</h2>
-        </div>
-        <div class="content">
-            <table>
+    <div class="print-wrapper">
+        <div class="container">
+            <div class="header-side">
+                <h2>Lembar Disposisi</h2>
+            </div>
+            <div class="content">
+                <div class="header-top">
+                    <table class="header-top-table">
+                        <tr>
+                            <td class="header-top-logo" style="text-align: center;">
+                                <img src="{{ asset('img/logo.jpg') }}" alt="Logo" style="height: 40px;">
+                            </td>
+                            <td style="text-align: center;">
+                                <div class="header-top-text-main">PEMERINTAH PROVINSI SUMATERA SELATAN</div>
+                                <div class="header-top-text-main">SEKRETARIAT DPRD</div>
+                                <div class="header-top-text-sub">Jln. Kapten A. Rivai Telp. (0711) 313184, 311537, 351272 Palembang 30137</div>
+                                <div class="header-top-text-sub">E-mail: info@dprd.sumselprov.go.id &nbsp; Website: dprd.sumselprov.go.id</div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="title-disposisi">LEMBAR DISPOSISI</div>
+                </div>
+                <table>
                 <tr class="header-cells">
                     <td colspan="3" style="border-right: 1px solid #000; width: 50%;">
                         <!-- Empty Space for Header / Logo if needed -->
@@ -143,6 +196,26 @@
                     </td>
                 </tr>
                 <tr>
+                    <td colspan="2" style="width: 30%;">
+                        <span class="label">Diterima Tgl</span>
+                        <div class="value handwriting">{{ \Carbon\Carbon::parse($surat->tgl_terima)->format('d F Y') }}</div>
+                    </td>
+                    <td colspan="2" style="width: 40%;">
+                        <span class="label">No Agenda</span>
+                        <div class="value handwriting">{{ $surat->no_agenda ?? '-' }}</div>
+                    </td>
+                    <td colspan="2" style="width: 30%;">
+                        <span class="label">Sifat</span>
+                        <div class="value handwriting">
+                            @if($disposisi && $disposisi->sifat)
+                                {{ $disposisi->sifat }}
+                            @else
+                                &nbsp;
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+                <tr>
                     <td colspan="2" style="height: 60px;">
                         <span class="label">Pengolah</span>
                         <div class="value handwriting">
@@ -166,6 +239,25 @@
                     <td colspan="2">
                         <span class="label">Tanda Terima</span>
                         <div class="value">&nbsp;</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6" style="height: 60px;">
+                        <span class="label">Instruksi / Harap</span>
+                        <div class="value handwriting">
+                            @if($disposisi)
+                                @if($disposisi->instruksi_pilihan)
+                                    <ul style="margin: 0; padding-left: 20px;">
+                                        @foreach($disposisi->instruksi_pilihan as $pilihan)
+                                            <li>{{ $pilihan }}</li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                                @if($disposisi->isi_disposisi)
+                                    <div>{{ $disposisi->isi_disposisi }}</div>
+                                @endif
+                            @endif
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -197,6 +289,7 @@
                 </div>
             </div>
             @endif
+            </div>
         </div>
     </div>
 </body>

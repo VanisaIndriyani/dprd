@@ -5,30 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak Kartu Surat Keluar - {{ $surat->no_surat }}</title>
     <style>
+        .print-wrapper {
+            width: 100%;
+        }
         @media print {
             @page {
                 size: A5 landscape;
-                margin: 10mm;
+                margin: 6mm;
             }
             body {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+                margin: 0;
+                padding: 0;
             }
             .no-print {
                 display: none;
             }
+            .print-wrapper {
+                transform: scale(0.85);
+                transform-origin: top left;
+            }
         }
         body {
             font-family: 'Times New Roman', Times, serif;
-            font-size: 12pt;
+            font-size: 11pt;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
         }
         .container {
             width: 100%;
             border: 2px solid #000;
             padding: 0;
             position: relative;
+            page-break-inside: avoid;
         }
         .header-side {
             position: absolute;
@@ -58,7 +68,7 @@
         }
         td {
             border: 1px solid #000;
-            padding: 5px 8px;
+            padding: 4px 6px;
             vertical-align: top;
         }
         .label {
@@ -69,11 +79,11 @@
         }
         .value {
             font-weight: bold;
-            font-size: 12pt;
+            font-size: 11pt;
         }
         .handwriting {
             font-family: 'Courier New', Courier, monospace;
-            font-size: 14pt;
+            font-size: 12pt;
             color: #000;
         }
         .row-header td {
@@ -104,12 +114,13 @@
         <button onclick="window.close()" class="btn-close" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Tutup</button>
     </div>
 
-    <div class="container">
-        <div class="header-side">
-            <h2>Kartu Surat Keluar</h2>
-        </div>
-        <div class="content">
-            <table>
+    <div class="print-wrapper">
+        <div class="container">
+            <div class="header-side">
+                <h2>Kartu Surat Keluar</h2>
+            </div>
+            <div class="content">
+                <table>
                 <tr class="header-cells">
                     <td colspan="3" style="border-right: 1px solid #000; width: 50%;">
                         <!-- Empty Space for Header / Logo if needed -->
@@ -131,7 +142,14 @@
                 <tr>
                     <td colspan="6" style="height: 80px;">
                         <span class="label">Isi Ringkas / Perihal</span>
-                        <div class="value handwriting">{{ $surat->perihal }}</div>
+                        @php
+                            $isiRingkas = $surat->perihal;
+                            $prefix = 'Tindak Lanjut Disposisi: ';
+                            if (strpos($isiRingkas, $prefix) === 0) {
+                                $isiRingkas = substr($isiRingkas, strlen($prefix));
+                            }
+                        @endphp
+                        <div class="value handwriting">{{ $isiRingkas }}</div>
                     </td>
                 </tr>
                 <tr>
@@ -229,6 +247,7 @@
                 </div>
             </div>
             @endif
+            </div>
         </div>
     </div>
 </body>
