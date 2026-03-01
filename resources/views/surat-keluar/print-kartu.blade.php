@@ -5,39 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak Kartu Surat Keluar - {{ $surat->no_surat }}</title>
     <style>
-        .print-wrapper {
-            width: 100%;
-        }
         @media print {
             @page {
                 size: A5 landscape;
-                margin: 6mm;
+                margin: 5mm;
             }
             body {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
                 margin: 0;
-                padding: 0;
             }
             .no-print {
                 display: none;
             }
-            .print-wrapper {
-                transform: scale(0.85);
-                transform-origin: top left;
-            }
+        }
+        .print-wrapper {
+            width: 100%;
         }
         body {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 11pt;
+            font-family: "Times New Roman", serif;
+            font-size: 10.5pt;
             margin: 0;
-            padding: 10px;
+            padding: 8px;
         }
         .container {
-            width: 100%;
             border: 2px solid #000;
-            padding: 0;
             position: relative;
+            width: 100%;
             page-break-inside: avoid;
         }
         .header-side {
@@ -50,17 +42,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #f0f0f0;
         }
         .header-side h2 {
             transform: rotate(-90deg);
-            white-space: nowrap;
+            font-size: 12.5pt;
             margin: 0;
-            font-size: 16pt;
+            letter-spacing: 2px;
             text-transform: uppercase;
+            white-space: nowrap;
+            font-weight: bold;
         }
         .content {
-            margin-left: 40px;
+            margin-left: 35px;
         }
         table {
             width: 100%;
@@ -68,43 +61,33 @@
         }
         td {
             border: 1px solid #000;
-            padding: 4px 6px;
+            padding: 5px 7px;
             vertical-align: top;
         }
         .label {
-            font-size: 10pt;
-            color: #333;
-            margin-bottom: 5px;
+            font-size: 9pt;
             display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+            letter-spacing: 0.2px;
         }
         .value {
-            font-weight: bold;
             font-size: 11pt;
+            font-weight: bold;
+            min-height: 18px;
+            line-height: 1.5;
+            word-break: break-word;
         }
         .handwriting {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 12pt;
-            color: #000;
-        }
-        .row-header td {
-            border-top: none;
-            border-left: none;
-            border-right: none;
+            font-family: "Times New Roman", serif;
+            font-weight: normal;
+            white-space: pre-wrap;
         }
         .header-cells td {
             border-bottom: 2px solid #000;
         }
-        .btn-print {
-            background-color: #0d6efd; 
-            color: white; 
-            border: none; 
-            border-radius: 5px;
-        }
-        .btn-close {
-            background-color: #6c757d; 
-            color: white; 
-            border: none; 
-            border-radius: 5px;
+        .kv {
+            margin-bottom: 8px;
         }
     </style>
 </head>
@@ -140,45 +123,42 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="6" style="height: 80px;">
-                        <span class="label">Isi Ringkas / Perihal</span>
-                        @php
-                            $isiRingkas = $surat->perihal;
-                            $prefix = 'Tindak Lanjut Disposisi: ';
-                            if (strpos($isiRingkas, $prefix) === 0) {
-                                $isiRingkas = substr($isiRingkas, strlen($prefix));
-                            }
-                        @endphp
-                        <div class="value handwriting">{{ $isiRingkas }}</div>
+                    <td style="width: 65%; vertical-align: top;">
+                        <div class="kv">
+                            <span class="label">Tujuan Surat</span>
+                            <div class="value handwriting">{{ $surat->tujuan }}</div>
+                        </div>
+                        <div class="kv">
+                            <span class="label">Nomor Surat</span>
+                            <div class="value handwriting">{{ $surat->no_surat }}</div>
+                        </div>
+                        <div class="kv">
+                            <span class="label">Tanggal Surat</span>
+                            <div class="value handwriting">{{ \Carbon\Carbon::parse($surat->tgl_keluar)->format('d F Y') }}</div>
+                        </div>
+                    </td>
+                    <td style="width: 35%; vertical-align: top;">
+                        <div class="kv">
+                            <span class="label">Dari / Pengolah</span>
+                            <div class="value handwriting">{{ $surat->pengolah ?? '-' }}</div>
+                        </div>
+                        <div class="kv">
+                            <span class="label">Lampiran</span>
+                            <div class="value handwriting">-</div>
+                        </div>
+                        <div class="kv">
+                            <span class="label">Sifat</span>
+                            <div class="value handwriting">
+                                @if($disposisi && $disposisi->sifat)
+                                    {{ $disposisi->sifat }}
+                                @endif
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3">
-                        <span class="label">Dari / Pengolah</span>
-                        <div class="value handwriting">{{ $surat->pengolah ?? '-' }}</div>
-                    </td>
-                    <td colspan="3">
-                        <span class="label">Tujuan Surat</span>
-                        <div class="value handwriting">{{ $surat->tujuan }}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="width: 30%;">
-                        <span class="label">Tanggal Surat</span>
-                        <div class="value handwriting">{{ \Carbon\Carbon::parse($surat->tgl_keluar)->format('d F Y') }}</div>
-                    </td>
-                    <td colspan="2" style="width: 40%;">
-                        <span class="label">Nomor Surat</span>
-                        <div class="value handwriting">{{ $surat->no_surat }}</div>
-                    </td>
-                    <td colspan="2" style="width: 30%;">
-                        <span class="label">Lampiran</span>
-                        <div class="value handwriting">-</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" style="height: 60px;">
-                        <span class="label">Pengolah / Diteruskan Kepada</span>
+                    <td colspan="2" style="height: 70px;">
+                        <span class="label">Diteruskan Kepada</span>
                         <div class="value handwriting">
                             @if($disposisi)
                                 {{ $disposisi->tujuan_disposisi }}
@@ -203,23 +183,19 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="4" style="height: 80px;">
+                    <td colspan="4" style="height: 90px;">
                         <span class="label">Instruksi / Catatan</span>
                         <div class="value handwriting">
-                            @if($disposisi)
-                                @if($disposisi->instruksi_pilihan)
-                                    <ul style="margin: 0; padding-left: 20px;">
-                                        @foreach($disposisi->instruksi_pilihan as $pilihan)
-                                            <li>{{ $pilihan }}</li>
-                                        @endforeach
-                                    </ul>
-                                @endif
-                                @if($disposisi->isi_disposisi)
-                                    <div>{{ $disposisi->isi_disposisi }}</div>
-                                @endif
-                                @if($disposisi->catatan)
-                                    <div style="margin-top: 5px; font-style: italic;">"{{ $disposisi->catatan }}"</div>
-                                @endif
+                            @if($disposisi && $disposisi->instruksi_pilihan)
+                                @foreach($disposisi->instruksi_pilihan as $pilihan)
+                                    <div>✓ {{ $pilihan }}</div>
+                                @endforeach
+                            @endif
+                            @if($disposisi && $disposisi->isi_disposisi)
+                                <div>{{ $disposisi->isi_disposisi }}</div>
+                            @endif
+                            @if($disposisi && $disposisi->catatan)
+                                <div style="margin-top: 5px; font-style: italic;">"{{ $disposisi->catatan }}"</div>
                             @endif
                         </div>
                     </td>
@@ -234,19 +210,17 @@
                 </tr>
             </table>
 
-            @if($disposisi)
             <div style="margin-top: 20px; text-align: right; padding-right: 20px;">
                 <div style="display: inline-block; text-align: center;">
-                    <div style="font-size: 10pt; margin-bottom: 5px;">{{ $disposisi->ttd_jabatan }}</div>
-                    @if($disposisi->ttd_image)
+                    <div style="font-size: 10pt; margin-bottom: 5px;">Nama Jabatan Paraf dan Tanggal</div>
+                    @if(isset($disposisi) && $disposisi->ttd_image)
                         <img src="{{ asset('storage/' . $disposisi->ttd_image) }}" alt="TTD" style="height: 60px; margin: 5px 0;">
                     @else
                         <div style="height: 60px;"></div>
                     @endif
-                    <div style="font-weight: bold; text-decoration: underline;">{{ $disposisi->ttd_nama }}</div>
+                    <div style="font-weight: bold; text-decoration: underline;">Nama</div>
                 </div>
             </div>
-            @endif
             </div>
         </div>
     </div>
