@@ -5,40 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak Kartu Surat Masuk - {{ $surat->no_surat }}</title>
     <style>
+        @page {
+            size: A4 landscape;
+            margin: 5mm;
+        }
         @media print {
-            @page {
-                size: A5 landscape;
-                margin: 5mm;
-            }
-            body {
-                margin: 0;
-            }
-            .no-print {
-                display: none;
-            }
+            .no-print { display: none; }
+        }
+        html, body {
+            height: 100%;
+        }
+        body {
+            margin: 0;
+        }
+        .container, table, tr, td {
+            page-break-inside: avoid;
         }
         .print-wrapper {
             width: 100%;
         }
         body {
-            font-family: "Times New Roman", serif;
-            font-size: 10.5pt;
+            font-family: {{ isset($pdf) ? '"Times", serif' : '"Times New Roman", serif' }};
+            font-size: {{ isset($pdf) ? '9pt' : '9.5pt' }};
             margin: 0;
-            padding: 8px;
+            padding: {{ isset($pdf) ? '5px' : '8px' }};
         }
         .container {
-            border: 2px solid #000;
+            border: 1px solid #000;
             position: relative;
             width: 100%;
             page-break-inside: avoid;
+            height: 100%;
         }
+        .content table { border-left: 0; border-top: 0; }
+        .content tr:first-child td { border-top: 0; }
+        @if(!isset($pdf))
         .header-side {
             position: absolute;
             left: 0;
             top: 0;
             bottom: 0;
             width: 40px;
-            border-right: 2px solid #000;
+            border-right: 1px solid #000;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -53,11 +61,32 @@
             font-weight: bold;
         }
         .content {
-            margin-left: 35px;
+            margin-left: 40px;
         }
+        @else
+        .header-side {
+            float: left;
+            width: 40px;
+            border-right: 1px solid #000;
+            text-align: center;
+            position: relative;
+        }
+        .header-side h2 {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-size: 12pt;
+            margin: 10px 0;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .content {
+            margin-left: 40px;
+        }
+        @endif
         .header-top {
             text-align: center;
-            padding: 6px 10px 6px;
+            padding: {{ isset($pdf) ? '4px 8px 4px' : '5px 8px 5px' }};
             border-bottom: 1px solid #000;
         }
         .header-top-table {
@@ -87,21 +116,21 @@
         }
         td {
             border: 1px solid #000;
-            padding: 5px 7px;
+            padding: {{ isset($pdf) ? '4px 5px' : '4px 6px' }};
             vertical-align: top;
         }
         .label {
-            font-size: 9pt;
+            font-size: {{ isset($pdf) ? '8pt' : '8.5pt' }};
             display: block;
             margin-bottom: 4px;
             font-weight: bold;
             letter-spacing: 0.2px;
         }
         .value {
-            font-size: 11pt;
+            font-size: {{ isset($pdf) ? '10pt' : '10.5pt' }};
             font-weight: bold;
             min-height: 18px;
-            line-height: 1.5;
+            line-height: {{ isset($pdf) ? '1.35' : '1.4' }};
             word-break: break-word;
         }
         .handwriting {
@@ -110,7 +139,7 @@
             white-space: pre-wrap;
         }
         .header-cells td {
-            border-bottom: 2px solid #000;
+            border-bottom: 1px solid #000;
         }
         .kv {
             margin-bottom: 8px;
@@ -122,21 +151,27 @@
 </head>
 <body>
     <div class="no-print" style="margin-bottom: 20px;">
-        <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Cetak Kartu</button>
-        <button onclick="window.close()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Tutup</button>
+        <button onclick="window.print()" style="padding: 10px 16px; font-size: 15px; cursor: pointer; background:#000; color:#fff; border-radius:4px; border:none;">Cetak</button>
+        <button onclick="window.close()" style="padding: 10px 16px; font-size: 15px; cursor: pointer;">Tutup</button>
     </div>
 
     <div class="print-wrapper">
         <div class="container">
             <div class="header-side">
-                <h2>Lembar Disposisi</h2>
+                @if(isset($pdf))
+                <div class="vertical-text" style="font-weight:bold;font-size:12pt;text-align:center;position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);">
+                    L<br>E<br>M<br>B<br>A<br>R<br>&nbsp;<br>D<br>I<br>S<br>P<br>O<br>S<br>I
+                </div>
+                @else
+                <h2></h2>
+                @endif
             </div>
             <div class="content">
                 <div class="header-top">
                     <table class="header-top-table">
                         <tr>
                             <td class="header-top-logo" style="text-align: center;">
-                                <img src="{{ asset('img/logo.jpg') }}" alt="Logo" style="height: 40px;">
+                                <img src="{{ isset($pdf) ? public_path('img/logo.jpg') : asset('img/logo.jpg') }}" alt="Logo" style="height: {{ isset($pdf) ? '30px' : '36px' }};">
                             </td>
                             <td style="text-align: center;">
                                 <div class="header-top-text-main">PEMERINTAH PROVINSI SUMATERA SELATAN</div>
@@ -150,22 +185,7 @@
                 </div>
                 <table>
                 <tr class="header-cells">
-                    <td colspan="3" style="border-right: 1px solid #000; width: 50%;">
-                        <!-- Empty Space for Header / Logo if needed -->
-                        <div style="height: 40px;"></div>
-                    </td>
-                    <td style="width: 15%;">
-                        <span class="label">Indek</span>
-                        <div class="value">&nbsp;</div>
-                    </td>
-                    <td style="width: 15%;">
-                        <span class="label">Kode</span>
-                        <div class="value">000.1.5</div>
-                    </td>
-                    <td style="width: 20%;">
-                        <span class="label">Nomor Urut</span>
-                        <div class="value handwriting">{{ $surat->no_agenda ?? '-' }}</div>
-                    </td>
+                    <td colspan="6" style="min-height: {{ isset($pdf) ? '0' : '30px' }};"></td>
                 </tr>
                 <tr>
                     <td style="width: 65%; vertical-align: top;">
@@ -204,13 +224,13 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2" style="height: 70px;">
+                    <td colspan="2" style="min-height: {{ isset($pdf) ? '50px' : '60px' }};">
                         <span class="label">Hal / Isi Ringkas</span>
                         <div class="value handwriting">{{ $surat->perihal }}</div>
                     </td>
                 </tr>
                 <tr>
-                    <td style="height: 80px;">
+                    <td style="min-height: {{ isset($pdf) ? '50px' : '60px' }};">
                         <span class="label">Diteruskan kepada sdr :</span>
                         <div class="value handwriting">
                             @if($disposisi && $disposisi->tujuan_disposisi)
@@ -220,7 +240,7 @@
                             @endif
                         </div>
                     </td>
-                    <td style="height: 80px;">
+                    <td style="min-height: {{ isset($pdf) ? '50px' : '60px' }};">
                         <span class="label">Dengan hormat harap :</span>
                         <div class="value handwriting">
                             @if($disposisi && $disposisi->instruksi_pilihan)
@@ -234,7 +254,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2" style="height: 90px;">
+                    <td colspan="2" style="min-height: {{ isset($pdf) ? '50px' : '60px' }};">
                         <span class="label">Catatan</span>
                         <div class="value handwriting">
                             @if($disposisi && $disposisi->catatan)
@@ -249,7 +269,7 @@
                 <div style="display: inline-block; text-align: center;">
                     <div style="font-size: 10pt; margin-bottom: 5px;">Nama Jabatan Paraf dan Tanggal</div>
                     @if(isset($disposisi) && $disposisi->ttd_image)
-                        <img src="{{ asset('storage/' . $disposisi->ttd_image) }}" alt="TTD" style="height: 60px; margin: 5px 0;">
+                        <img src="{{ isset($pdf) ? public_path('storage/' . $disposisi->ttd_image) : asset('storage/' . $disposisi->ttd_image) }}" alt="TTD" style="height: {{ isset($pdf) ? '50px' : '60px' }}; margin: 5px 0;">
                     @else
                         <div style="height: 60px;"></div>
                     @endif

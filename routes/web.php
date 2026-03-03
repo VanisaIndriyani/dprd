@@ -18,6 +18,7 @@ Route::controller(SipersuratController::class)->group(function () {
     Route::put('/surat-masuk/{id}', 'updateSuratMasuk')->name('surat-masuk.update');
     Route::delete('/surat-masuk/{id}', 'destroySuratMasuk')->name('surat-masuk.destroy');
     Route::get('/surat-masuk/{id}/print', 'printKartuSuratMasuk')->name('surat-masuk.print');
+    Route::get('/surat-masuk/{id}/download', 'downloadKartuSuratMasuk')->name('surat-masuk.download');
     
     Route::get('/surat-keluar', 'suratKeluar')->name('surat-keluar');
     Route::get('/surat-keluar/{id}/print', 'printKartuSuratKeluar')->name('surat-keluar.print');

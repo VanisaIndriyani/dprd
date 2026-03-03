@@ -9,6 +9,8 @@ use App\Models\SuratKeluar;
 use App\Models\Disposisi;
 
 use Illuminate\Support\Facades\Storage;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class SipersuratController extends Controller
 {
@@ -209,6 +211,38 @@ class SipersuratController extends Controller
         $disposisi = Disposisi::where('surat_masuk_id', $id)->latest()->first();
 
         return view('surat-masuk.print-kartu', compact('surat', 'disposisi'));
+    }
+
+    public function downloadKartuSuratMasuk($id)
+    {
+        if (!session('is_logged_in')) return redirect()->route('login');
+        $surat = SuratMasuk::findOrFail($id);
+        $disposisi = Disposisi::where('surat_masuk_id', $id)->latest()->first();
+
+        $html = view('surat-masuk.print-kartu', [
+            'surat' => $surat,
+            'disposisi' => $disposisi,
+            'pdf' => true,
+        ])->render();
+
+        $options = new Options();
+        $options->setIsRemoteEnabled(false);
+        $options->setIsHtml5ParserEnabled(true);
+        $options->setDefaultFont('Times');
+        $options->set('dpi', 96);
+        $options->setChroot(public_path());
+        $options->setTempDir(storage_path('app/private/dompdf'));
+        $options->set('fontCache', storage_path('app/private/dompdf'));
+
+        $dompdf = new Dompdf($options);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->loadHtml($html);
+        $dompdf->render();
+
+        $filename = 'Kartu-Surat-Masuk-'.$surat->no_surat.'.pdf';
+        return response($dompdf->output(), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="'.$filename.'"');
     }
 
     public function printKartuSuratKeluar($id)

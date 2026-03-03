@@ -84,53 +84,15 @@
     </div>
 </div>
 
-<!-- Chart & Recent Activity -->
+<!-- Chart -->
 <div class="row g-4">
-    <!-- Chart -->
-    <div class="col-lg-8">
+    <div class="col-lg-12">
         <div class="card card-custom h-100">
             <div class="card-header card-header-custom py-3">
                 <h5 class="card-title mb-0">Statistik Surat Bulanan (2026)</h5>
             </div>
             <div class="card-body">
                 <canvas id="suratChart" height="120"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recent Activity -->
-    <div class="col-lg-4">
-        <div class="card card-custom h-100">
-            <div class="card-header bg-white border-bottom py-3">
-                <h5 class="card-title mb-0 text-dark">Aktivitas Terbaru</h5>
-            </div>
-            <div class="card-body p-0">
-                <div class="list-group list-group-flush">
-                    <div class="list-group-item px-4 py-3">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1 text-primary">Disposisi Baru</h6>
-                            <small class="text-muted">10 min ago</small>
-                        </div>
-                        <p class="mb-1 small">Surat dari Kemendagri telah didisposisikan oleh Sekwan.</p>
-                    </div>
-                    <div class="list-group-item px-4 py-3">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1 text-success">Surat Masuk</h6>
-                            <small class="text-muted">1 jam ago</small>
-                        </div>
-                        <p class="mb-1 small">Surat undangan dari Gubernur Sumsel diterima.</p>
-                    </div>
-                    <div class="list-group-item px-4 py-3">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1 text-info">Surat Keluar</h6>
-                            <small class="text-muted">3 jam ago</small>
-                        </div>
-                        <p class="mb-1 small">Balasan untuk Dinas PU telah dikirim.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer bg-white text-center border-0 py-3">
-                <a href="#" class="text-decoration-none text-custom-gold fw-bold">Lihat Semua Aktivitas</a>
             </div>
         </div>
     </div>
