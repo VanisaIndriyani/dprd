@@ -118,6 +118,12 @@
             line-height: 1.4;
             word-break: break-word;
         }
+        .value.handwriting.pengolah {
+            font-size: 10.5pt;
+            font-weight: normal;
+            line-height: 1.3;
+            text-align: left;
+        }
         .handwriting {
             font-family: "Times New Roman", serif;
             font-weight: normal;
@@ -212,7 +218,7 @@
                 <tr>
                     <td colspan="2" style="height: 60px;">
                         <span class="label">Pengolah</span>
-                        <div class="value handwriting">
+                        <div class="value handwriting pengolah">
                             @if($disposisi && $disposisi->tujuan_disposisi)
                                 {{ $disposisi->tujuan_disposisi }}
                             @elseif(!empty($surat->tujuan))
