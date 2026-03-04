@@ -581,12 +581,17 @@ class SipersuratController extends Controller
         $suratMasuk = $queryMasuk->get()->map(function($item) {
             $item->jenis = 'Surat Masuk';
             $item->tanggal = $item->tgl_terima;
+            $latest = \App\Models\Disposisi::where('surat_masuk_id', $item->id)->latest()->first();
+            $item->pengolah_display = $latest ? $latest->tujuan_disposisi : '-';
+            $item->tujuan_display = $latest ? $latest->tujuan_disposisi : '-';
             return $item;
         });
 
         $suratKeluar = $queryKeluar->get()->map(function($item) {
             $item->jenis = 'Surat Keluar';
             $item->tanggal = $item->tgl_keluar;
+            $item->pengolah_display = $item->tujuan ?: '-';
+            $item->tujuan_display = $item->tujuan ?: '-';
             return $item;
         });
 

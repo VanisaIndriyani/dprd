@@ -63,9 +63,11 @@
                             <th scope="col" class="py-3" width="15%">Jenis Surat</th>
                             <th scope="col" class="py-3" width="20%">No. Surat</th>
                             <th scope="col" class="py-3" width="25%">Perihal</th>
+                            <th scope="col" class="py-3" width="15%">Tujuan</th>
+                            <th scope="col" class="py-3" width="15%">Pengolah</th>
                             <th scope="col" class="py-3" width="15%">Tgl Surat</th>
                             <th scope="col" class="py-3" width="10%">Status</th>
-                            <th scope="col" class="text-end pe-4 py-3" width="15%">Aksi</th>
+                            <th scope="col" class="text-end pe-4 py-3" width="10%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,6 +87,8 @@
                             </td>
                             <td class="fw-bold text-dark">{{ $item->no_surat }}</td>
                             <td class="text-dark">{{ $item->perihal }}</td>
+                            <td class="text-dark">{{ $item->tujuan_display }}</td>
+                            <td class="text-dark">{{ $item->pengolah_display }}</td>
                             <td class="text-secondary small">
                                 <i class="bi bi-calendar3 me-1"></i>
                                 {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}
