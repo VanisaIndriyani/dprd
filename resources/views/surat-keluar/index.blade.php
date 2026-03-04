@@ -40,11 +40,24 @@
                     <h5 class="mb-0 fw-bold text-secondary">Daftar Surat Keluar</h5>
                 </div>
                 <div class="col-12 col-md-5 mb-3 mb-md-0">
-                    <form action="{{ route('surat-keluar') }}" method="GET">
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
-                            <input type="text" name="search" class="form-control border-start-0 ps-0 bg-light" placeholder="Cari Surat..." value="{{ request('search') }}">
-                            <button class="btn btn-success text-white" type="submit">Cari</button>
+                    <form action="{{ route('surat-keluar') }}" method="GET" class="row g-2 align-items-center">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                                <input type="text" name="search" class="form-control border-start-0 ps-0 bg-light" placeholder="Cari Surat..." value="{{ request('search') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-calendar3 text-muted"></i></span>
+                                <input type="date" name="tanggal" class="form-control border-start-0 ps-0 bg-light" value="{{ request('tanggal') }}" placeholder="Tanggal Surat">
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                            <button class="btn btn-success text-white" type="submit">Filter</button>
+                            @if(request()->filled('search') || request()->filled('tanggal'))
+                                <a href="{{ route('surat-keluar') }}" class="btn btn-outline-secondary ms-2">Reset</a>
+                            @endif
                         </div>
                     </form>
                 </div>

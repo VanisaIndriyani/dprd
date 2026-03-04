@@ -40,11 +40,24 @@
                     <h5 class="mb-0 fw-bold text-secondary">Daftar Surat Masuk</h5>
                 </div>
                 <div class="col-12 col-md-5 mb-3 mb-md-0">
-                    <form action="{{ route('surat-masuk') }}" method="GET">
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
-                            <input type="text" name="search" class="form-control border-start-0 ps-0 bg-light" placeholder="Cari Surat..." value="{{ request('search') }}">
-                            <button class="btn btn-success text-white" type="submit">Cari</button>
+                    <form action="{{ route('surat-masuk') }}" method="GET" class="row g-2 align-items-center">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                                <input type="text" name="search" class="form-control border-start-0 ps-0 bg-light" placeholder="Cari Surat..." value="{{ request('search') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-calendar3 text-muted"></i></span>
+                                <input type="date" name="tanggal" class="form-control border-start-0 ps-0 bg-light" value="{{ request('tanggal') }}" placeholder="Tanggal Surat">
+                            </div>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center">
+                            <button class="btn btn-success text-white" type="submit">Filter</button>
+                            @if(request()->filled('search') || request()->filled('tanggal'))
+                                <a href="{{ route('surat-masuk') }}" class="btn btn-outline-secondary ms-2">Reset</a>
+                            @endif
                         </div>
                     </form>
                 </div>
@@ -59,12 +72,14 @@
                     <thead class="bg-light text-secondary">
                         <tr>
                             <th scope="col" class="ps-4 py-3" width="5%">No</th>
-                            <th scope="col" class="py-3" width="10%">No Agenda</th>
-                            <th scope="col" class="py-3" width="20%">Info Surat</th>
-                            <th scope="col" class="py-3" width="25%">Perihal</th>
+                            <th scope="col" class="py-3" width="10%">Nomor Urut</th>
+                            <th scope="col" class="py-3" width="12%">Nomor Berkas</th>
+                            <th scope="col" class="py-3" width="18%">Alamat Penerima</th>
                             <th scope="col" class="py-3" width="15%">Tanggal</th>
-                            <th scope="col" class="py-3" width="15%">Status</th>
-                            <th scope="col" class="text-end pe-4 py-3" width="20%">Aksi</th>
+                            <th scope="col" class="py-3" width="20%">Perihal</th>
+                            <th scope="col" class="py-3" width="10%">Nomor Surat</th>
+                            <th scope="col" class="py-3" width="10%">Status</th>
+                            <th scope="col" class="text-end pe-4 py-3" width="10%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -75,24 +90,22 @@
                                 <span class="badge bg-light text-dark border">{{ $surat->no_agenda ?? '-' }}</span>
                             </td>
                             <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-light rounded-circle p-2 me-3 d-flex justify-content-center align-items-center" style="width: 40px; height: 40px;">
-                                        <i class="bi bi-envelope text-success"></i>
-                                    </div>
-                                    <div>
-                                        <div class="fw-bold text-dark">{{ $surat->pengirim }}</div>
-                                        <small class="text-muted d-block"><i class="bi bi-hash me-1"></i>{{ $surat->no_surat }}</small>
-                                    </div>
-                                </div>
+                                <span class="badge bg-light text-dark border">{{ $surat->no_agenda ?? '-' }}</span>
                             </td>
-                            <td>
-                                <span class="text-dark">{{ $surat->perihal }}</span>
+                            <td class="text-dark">
+                                {{ $surat->pengirim }}
                             </td>
                             <td>
                                 <div class="text-secondary small">
                                     <div class="mb-1"><i class="bi bi-calendar-event me-1"></i> Surat: {{ $surat->tgl_surat ? \Carbon\Carbon::parse($surat->tgl_surat)->format('d M Y') : '-' }}</div>
                                     <div><i class="bi bi-calendar-check me-1"></i> Terima: {{ \Carbon\Carbon::parse($surat->tgl_terima)->format('d M Y') }}</div>
                                 </div>
+                            </td>
+                            <td>
+                                <span class="text-dark">{{ $surat->perihal }}</span>
+                            </td>
+                            <td class="text-dark">
+                                {{ $surat->no_surat }}
                             </td>
                             <td>
                                 @if($surat->status == 'Menunggu Disposisi')

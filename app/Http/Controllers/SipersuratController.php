@@ -108,6 +108,9 @@ class SipersuratController extends Controller
                   ->orWhere('pengirim', 'like', "%{$search}%");
             });
         }
+        if ($request->filled('tanggal')) {
+            $query->whereDate('tgl_surat', $request->tanggal);
+        }
 
         $suratMasuk = $query->paginate(10);
         return view('surat-masuk.index', compact('suratMasuk'));
@@ -128,6 +131,7 @@ class SipersuratController extends Controller
 
         $validated = $request->validate([
             'no_agenda' => 'required',
+            'no_berkas' => 'nullable',
             'no_surat' => 'required|unique:surat_masuks',
             'pengirim' => 'required',
             'perihal' => 'required',
@@ -165,6 +169,7 @@ class SipersuratController extends Controller
 
         $validated = $request->validate([
             'no_agenda' => 'required',
+            'no_berkas' => 'nullable',
             'no_surat' => 'required|unique:surat_masuks,no_surat,'.$id,
             'pengirim' => 'required',
             'perihal' => 'required',
@@ -269,6 +274,9 @@ class SipersuratController extends Controller
                   ->orWhere('perihal', 'like', "%{$search}%")
                   ->orWhere('tujuan', 'like', "%{$search}%");
             });
+        }
+        if ($request->filled('tanggal')) {
+            $query->whereDate('tgl_keluar', $request->tanggal);
         }
 
         $suratKeluar = $query->paginate(10);
