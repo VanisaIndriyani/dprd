@@ -213,8 +213,10 @@
                     <td colspan="2" style="height: 60px;">
                         <span class="label">Pengolah</span>
                         <div class="value handwriting">
-                            @if($disposisi)
+                            @if($disposisi && $disposisi->tujuan_disposisi)
                                 {{ $disposisi->tujuan_disposisi }}
+                            @elseif(!empty($surat->tujuan))
+                                {{ $surat->tujuan }}
                             @else
                                 &nbsp;
                             @endif
