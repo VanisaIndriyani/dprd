@@ -123,7 +123,24 @@
             font-weight: normal;
             line-height: 1.3;
             text-align: left;
+            margin-top: 0;
+            padding-top: 0;
         }
+        .value.handwriting.tgl-diteruskan {
+            font-size: 10.5pt;
+            font-weight: normal;
+            line-height: 1.3;
+            text-align: left;
+            margin-top: 0;
+            padding-top: 0;
+            padding-left: 2px;
+            display: inline-block;
+            float: left;
+            width: auto;
+        }
+        .label.pengolah-label { margin-bottom: 0; }
+        .label.tgl-diteruskan-label { margin-bottom: 0; }
+        .cell-tight { padding: 2px 4px !important; }
         .handwriting {
             font-family: "Times New Roman", serif;
             font-weight: normal;
@@ -216,8 +233,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="2" style="height: 60px;">
-                        <span class="label">Pengolah</span>
+                    <td colspan="2" class="cell-tight" style="min-height: 50px;">
+                        <span class="label pengolah-label">Pengolah</span>
                         <div class="value handwriting pengolah">
                             @if($disposisi && $disposisi->tujuan_disposisi)
                                 {{ $disposisi->tujuan_disposisi }}
@@ -228,11 +245,13 @@
                             @endif
                         </div>
                     </td>
-                    <td colspan="2">
-                        <span class="label">Tanggal Diteruskan</span>
-                        <div class="value handwriting">
-                            @if($disposisi)
+                    <td colspan="2" class="cell-tight">
+                        <span class="label tgl-diteruskan-label">Tanggal Diteruskan</span>
+                        <div class="value handwriting tgl-diteruskan">
+                            @if(isset($disposisi))
                                 {{ \Carbon\Carbon::parse($disposisi->created_at)->format('d F Y') }}
+                            @elseif(!empty($surat->tgl_diteruskan))
+                                {{ \Carbon\Carbon::parse($surat->tgl_diteruskan)->format('d F Y') }}
                             @else
                                 &nbsp;
                             @endif

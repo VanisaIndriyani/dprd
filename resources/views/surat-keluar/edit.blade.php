@@ -32,8 +32,12 @@
                     <input type="text" class="form-control" id="no_surat" name="no_surat" value="{{ $surat->no_surat }}" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="tgl_keluar" class="form-label fw-bold">Tanggal Keluar</label>
+                    <label for="tgl_keluar" class="form-label fw-bold">Tanggal Surat</label>
                     <input type="date" class="form-control" id="tgl_keluar" name="tgl_keluar" value="{{ $surat->tgl_keluar }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="tgl_diteruskan" class="form-label fw-bold">Tanggal Diteruskan</label>
+                    <input type="date" class="form-control" id="tgl_diteruskan" name="tgl_diteruskan" value="{{ $surat->tgl_diteruskan }}">
                 </div>
                 <div class="col-md-6">
                     <label for="pengolah" class="form-label fw-bold">Pengolah / Dari</label>

@@ -290,6 +290,7 @@ class SipersuratController extends Controller
         $validated = $request->validate([
             'no_surat' => 'required|unique:surat_keluars',
             'tgl_keluar' => 'required|date',
+            'tgl_diteruskan' => 'nullable|date',
             'pengolah' => 'nullable',
             'tujuan' => 'required',
             'perihal' => 'required',
@@ -325,6 +326,7 @@ class SipersuratController extends Controller
         $validated = $request->validate([
             'no_surat' => 'required|unique:surat_keluars,no_surat,' . $id,
             'tgl_keluar' => 'required|date',
+            'tgl_diteruskan' => 'nullable|date',
             'pengolah' => 'nullable',
             'tujuan' => 'required',
             'perihal' => 'required',

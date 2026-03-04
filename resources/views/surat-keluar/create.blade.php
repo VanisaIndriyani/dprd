@@ -31,8 +31,12 @@
                     <input type="text" class="form-control" id="no_surat" name="no_surat" placeholder="Contoh: 001/SK/2026" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="tgl_keluar" class="form-label fw-bold">Tanggal Keluar</label>
+                    <label for="tgl_keluar" class="form-label fw-bold">Tanggal Surat</label>
                     <input type="date" class="form-control" id="tgl_keluar" name="tgl_keluar" value="{{ date('Y-m-d') }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="tgl_diteruskan" class="form-label fw-bold">Tanggal Diteruskan</label>
+                    <input type="date" class="form-control" id="tgl_diteruskan" name="tgl_diteruskan" value="{{ date('Y-m-d') }}">
                 </div>
                 <div class="col-md-6">
                     <label for="pengolah" class="form-label fw-bold">Pengolah / Dari</label>

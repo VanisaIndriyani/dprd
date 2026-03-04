@@ -14,6 +14,7 @@ class SuratKeluar extends Model
         'tujuan',
         'perihal',
         'tgl_keluar',
+        'tgl_diteruskan',
         'status',
         'file_path',
     ];
