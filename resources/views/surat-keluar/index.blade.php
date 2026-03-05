@@ -72,50 +72,26 @@
                     <thead class="bg-light text-secondary">
                         <tr>
                             <th scope="col" class="ps-4 py-3" width="5%">No</th>
-                            <th scope="col" class="py-3" width="20%">Tujuan</th>
-                            <th scope="col" class="py-3" width="30%">Perihal</th>
-                            <th scope="col" class="py-3" width="20%">No. Surat / Tgl</th>
-                            <th scope="col" class="py-3" width="15%">Status</th>
-                            <th scope="col" class="text-end pe-4 py-3" width="20%">Aksi</th>
+                            <th scope="col" class="py-3" width="15%">No Urut</th>
+                            <th scope="col" class="py-3" width="25%">Alamat Penerima</th>
+                            <th scope="col" class="py-3" width="15%">Tgl Surat</th>
+                            <th scope="col" class="py-3" width="20%">Perihal</th>
+                            <th scope="col" class="py-3" width="10%">Keterangan</th>
+                            <th scope="col" class="text-end pe-4 py-3" width="10%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($suratKeluar as $index => $surat)
                         <tr>
                             <td class="ps-4 fw-bold text-muted">{{ $index + 1 }}</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-light rounded-circle p-2 me-3 d-flex justify-content-center align-items-center" style="width: 40px; height: 40px;">
-                                        <i class="bi bi-building text-success"></i>
-                                    </div>
-                                    <div class="fw-bold text-dark">{{ $surat->tujuan }}</div>
-                                </div>
+                            <td class="fw-bold text-dark">{{ $surat->no_surat }}</td>
+                            <td class="text-dark">{{ $surat->tujuan }}</td>
+                            <td class="text-secondary small">
+                                <i class="bi bi-calendar3 me-1"></i>
+                                {{ \Carbon\Carbon::parse($surat->tgl_keluar)->format('d M Y') }}
                             </td>
-                            <td>
-                                <span class="text-dark">{{ $surat->perihal }}</span>
-                            </td>
-                            <td>
-                                <div>
-                                    <div class="fw-bold text-dark">{{ $surat->no_surat }}</div>
-                                    <div class="text-secondary small">
-                                        <i class="bi bi-calendar3 me-1"></i>
-                                        {{ \Carbon\Carbon::parse($surat->tgl_keluar)->format('d M Y') }}
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                @if($surat->status == 'Dikirim')
-                                    <span class="badge bg-success bg-opacity-75 px-3 py-2 rounded-pill">
-                                        <i class="bi bi-send-check me-1"></i> Dikirim
-                                    </span>
-                                @elseif($surat->status == 'Draft')
-                                    <span class="badge bg-secondary bg-opacity-75 px-3 py-2 rounded-pill">
-                                        <i class="bi bi-file-earmark me-1"></i> Draft
-                                    </span>
-                                @else
-                                    <span class="badge bg-info bg-opacity-75 px-3 py-2 rounded-pill">{{ $surat->status }}</span>
-                                @endif
-                            </td>
+                            <td class="text-dark">{{ $surat->perihal }}</td>
+                            <td class="text-dark">{{ $surat->pengolah ?: '-' }}</td>
                             <td class="text-end pe-4">
                                 <div class="d-flex justify-content-end gap-1">
                                     <!-- View File -->
@@ -124,7 +100,6 @@
                                         <i class="bi bi-file-earmark-pdf"></i>
                                     </a>
                                     @endif
-
                                     <!-- Disposisi -->
                                     <a href="{{ route('disposisi-keluar', $surat->id) }}" class="btn btn-sm btn-outline-primary" title="Disposisi">
                                         <i class="bi bi-diagram-3"></i>
@@ -140,7 +115,6 @@
                                     <a href="{{ route('surat-keluar.edit', $surat->id) }}" class="btn btn-sm btn-outline-warning" title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    
                                     <!-- Hapus -->
                                     <form action="{{ route('surat-keluar.destroy', $surat->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus surat ini?');" class="d-inline">
                                         @csrf
