@@ -84,7 +84,25 @@
                         @forelse($suratKeluar as $index => $surat)
                         <tr>
                             <td class="ps-4 fw-bold text-muted">{{ $index + 1 }}</td>
-                            <td class="fw-bold text-dark">{{ $surat->no_surat }}</td>
+                            <td class="fw-bold text-dark">
+                                @php
+                                    $urut = '-';
+                                    if (!empty($surat->no_surat)) {
+                                        $parts = explode('/', $surat->no_surat);
+                                        $digits = [];
+                                        foreach ($parts as $p) {
+                                            if (preg_match('/^\d+$/', $p)) { $digits[] = $p; }
+                                        }
+                                        // Prefer numeric segment that is not a year (1900-2099), fallback to last numeric
+                                        for ($i = count($digits)-1; $i >= 0; $i--) {
+                                            $d = (int)$digits[$i];
+                                            if ($d < 1900 || $d > 2099) { $urut = $digits[$i]; break; }
+                                        }
+                                        if ($urut === '-' && count($digits)) { $urut = end($digits); }
+                                    }
+                                @endphp
+                                {{ $urut }}
+                            </td>
                             <td class="text-dark">{{ $surat->tujuan }}</td>
                             <td class="text-secondary small">
                                 <i class="bi bi-calendar3 me-1"></i>
