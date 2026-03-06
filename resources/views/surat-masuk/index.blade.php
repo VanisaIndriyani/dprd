@@ -87,7 +87,10 @@
                         <tr>
                             <td class="ps-4 fw-bold text-muted">{{ $index + 1 }}</td>
                             <td>
-                                <span class="badge bg-light text-dark border">{{ $surat->no_agenda ?? '-' }}</span>
+                                @php
+                                    $urut = $surat->no_agenda ? preg_replace('/^.*\\//', '', $surat->no_agenda) : '-';
+                                @endphp
+                                <span class="badge bg-light text-dark border">{{ $urut }}</span>
                             </td>
                             <td>
                                 <span class="badge bg-light text-dark border">{{ $surat->no_agenda ?? '-' }}</span>
